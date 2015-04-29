@@ -67,6 +67,17 @@ app.Stave = Backbone.View.extend({
     };
 
     // for each note, draw a note
+    this.collection.each(function(note) {
+
+      ctx.beginPath();
+      var x = note.get('x');
+      var y = note.get('y');
+      var radius = 20; // Arc radius
+      var startAngle = 0; // Starting point on circle
+      var endAngle = 2 * Math.PI
+      ctx.arc(x, y, radius, startAngle, endAngle);
+      ctx.fill();
+    });
       // if it's the highlighted note, make it green
     // draw the timeline
     ctx.beginPath();
@@ -82,9 +93,10 @@ app.Stave = Backbone.View.extend({
     console.log(event);
     // get the co-ordinates
     // for each note
-      // are the co-ords within a note? if so, remove that note
+      // are the co-ords within that note? if so, remove that note
     // else
-      // coerece to a stave on the y-axis
+    this.collection.addNote(event.offsetX, event.offsetY);
+      // coerece to a pitch on the y-axis
       // add a note
   },
 
