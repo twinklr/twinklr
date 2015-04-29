@@ -33,6 +33,8 @@ app.Stave = Backbone.View.extend({
   },
 
   render: function() {
+    var that = this;
+
     var c = $('#stave-canvas');
     var ctx = c[0].getContext('2d');
     var w = c.width();
@@ -68,6 +70,23 @@ app.Stave = Backbone.View.extend({
 
     // for each note, draw a note
     this.collection.each(function(note) {
+      var radius = 20;
+
+      console.log(that.absolutePlayHeadPos());
+
+      console.log(note.get('x') - radius);
+
+      // if it's the highlighted note, make it green
+      if( (that.absolutePlayHeadPos() >= (note.get('x')-radius)) &&
+        (that.absolutePlayHeadPos() < (note.get('x')+radius))
+       ) {
+        ctx.fillStyle = 'rgb(50, 255, 0)' // green.
+      console.log('green');
+
+      } else {
+        ctx.fillStyle = "#222";
+        console.log('black');
+      }
 
       ctx.beginPath();
       var x = note.get('x');
@@ -78,7 +97,7 @@ app.Stave = Backbone.View.extend({
       ctx.arc(x, y, radius, startAngle, endAngle);
       ctx.fill();
     });
-      // if it's the highlighted note, make it green
+
     // draw the timeline
     ctx.beginPath();
     ctx.lineWidth = 1;
@@ -90,7 +109,6 @@ app.Stave = Backbone.View.extend({
   },
 
   click: function(event) {
-    console.log(event);
     // get the co-ordinates
     // for each note
       // are the co-ords within that note? if so, remove that note
@@ -101,7 +119,6 @@ app.Stave = Backbone.View.extend({
   },
 
   mousewheel: function(event, delta) {
-    console.log(event);
     // advance the playhead
     event.preventDefault();
 
@@ -118,16 +135,16 @@ app.Stave = Backbone.View.extend({
       this.playHeadPos = 0;
     }
 
-    console.log(delta);
-    console.log(this.playHeadPos);
-
     this.render();
 
     // if it intersects with any notes
     // for each note it intersects with
       // play that note
       // make that the highlighted note
+  },
 
+  absolutePlayHeadPos: function() {
+    return this.playHeadPos + this.hPadding;
   }
 
 });
