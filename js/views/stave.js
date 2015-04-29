@@ -143,9 +143,13 @@ app.Stave = Backbone.View.extend({
     this.render();
 
     // if it intersects with any notes
+    var intersectingNotes = this.notesIntersectingX(this.absolutePlayHeadPos());
+    console.log(intersectingNotes);
     // for each note it intersects with
+    _.each(intersectingNotes, function(note) {
       // play that note
-      // make that the highlighted note
+      console.log("Play pitch", note.get('pitchIndex'));
+    });
   },
 
   absolutePlayHeadPos: function() {
@@ -170,6 +174,15 @@ app.Stave = Backbone.View.extend({
             (mouseX < noteX+radius) && 
             (mouseY > noteY-radius) && 
             (mouseY < noteY+ radius));
-  }
+  },
 
+  notesIntersectingX: function(x) {
+    var radius = this.lineHeight / 2;
+
+    return this.collection.filter(function(note) {
+      var noteX = note.get('x');
+
+      return ((x > noteX-radius) && (x < noteX+radius))
+    });
+  }
 });
