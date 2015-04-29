@@ -91,11 +91,11 @@ app.Stave = Backbone.View.extend({
     this.collection.each(function(note) {
       var radius = that.lineHeight/2;
 
-      // if it's the highlighted note, make it green
+      // if it's the highlighted note, make it red
       if( (that.absolutePlayHeadPos() >= (note.get('x')-radius)) &&
         (that.absolutePlayHeadPos() < (note.get('x')+radius))
        ) {
-        ctx.fillStyle = 'rgb(50, 255, 0)' // green.
+        ctx.fillStyle = 'rgb(156,20,21)' // red.
       } else {
         ctx.fillStyle = "#222";
       }
@@ -110,10 +110,10 @@ app.Stave = Backbone.View.extend({
       ctx.fill();
     });
 
-    // draw the green line to indicate playhead position
+    // draw the red line to indicate playhead position
     ctx.beginPath();
     ctx.lineWidth = 1;
-    ctx.strokeStyle = 'rgba(50, 255, 0, 0.6)' // green.
+    ctx.strokeStyle = 'rgb(156,20,12)' // red.
     var playHeadPos = this.playHeadPos + this.hPadding;
     ctx.moveTo(playHeadPos, 0);
     ctx.lineTo(playHeadPos, h);
