@@ -24,6 +24,9 @@ app.Stave = Backbone.View.extend({
     this.vPadding = 50;
     this.hPadding = 50;
 
+    this.staveHeight = this.height - (this.vPadding*2);
+    this.lineHeight = this.staveHeight / this.noteCount;
+
     this.collection.bind('change remove add reset', function() {
       console.log('Re-rendering stave.');
       this.render();
@@ -57,20 +60,19 @@ app.Stave = Backbone.View.extend({
 
     // now, draw the right number of lines
 
-    var staveHeight = this.height - (this.vPadding*2);
-    var lineHeight = staveHeight / this.noteCount;
+
 
     for (var i = this.noteCount - 1; i >= 0; i--) {
       ctx.beginPath();
       ctx.lineWidth = 1;
-      ctx.moveTo(this.hPadding, this.vPadding + (i * lineHeight));
-      ctx.lineTo(w-this.hPadding, this.vPadding + (i * lineHeight));
+      ctx.moveTo(this.hPadding, this.vPadding + (i * this.lineHeight));
+      ctx.lineTo(w-this.hPadding, this.vPadding + (i * this.lineHeight));
       ctx.stroke();
     };
 
     // for each note, draw a note
     this.collection.each(function(note) {
-      var radius = 20;
+      var radius = that.lineHeight/2;
 
       console.log(that.absolutePlayHeadPos());
 
@@ -91,7 +93,6 @@ app.Stave = Backbone.View.extend({
       ctx.beginPath();
       var x = note.get('x');
       var y = note.get('y');
-      var radius = 20; // Arc radius
       var startAngle = 0; // Starting point on circle
       var endAngle = 2 * Math.PI
       ctx.arc(x, y, radius, startAngle, endAngle);
