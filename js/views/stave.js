@@ -42,7 +42,30 @@ app.Stave = Backbone.View.extend({
     ctx.fillStyle = "#DBE3BC";
     ctx.fillRect(0, 0, w, h);
 
+
     // draw the staves
+
+    // first, a box round the edge
+    ctx.strokeStyle = "#222";
+    ctx.strokeRect(this.hPadding, this.vPadding, (this.width - this.hPadding*2), (this.height - this.vPadding*2));
+
+    // next, a thick starting line
+    ctx.fillStyle = "#222";
+    ctx.fillRect(this.hPadding, this.vPadding, 5, (this.height - this.vPadding*2));
+
+    // now, draw the right number of lines
+
+    var staveHeight = this.height - (this.vPadding*2);
+    var lineHeight = staveHeight / this.noteCount;
+
+    for (var i = this.noteCount - 1; i >= 0; i--) {
+      ctx.beginPath();
+      ctx.lineWidth = 1;
+      ctx.moveTo(this.hPadding, this.vPadding + (i * lineHeight));
+      ctx.lineTo(w-this.hPadding, this.vPadding + (i * lineHeight));
+      ctx.stroke();
+    };
+
     // for each note, draw a note
       // if it's the highlighted note, make it green
     // draw the timeline
