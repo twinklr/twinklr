@@ -13,7 +13,10 @@ app.Stave = Backbone.View.extend({
 
     this.playHeadPos = 0;
     this.currentNoteIndices = [];
-    this.noteCount = 8;
+    this.noteCount = 7;
+
+    this.direction = 'forward';
+    this.playedNotes = [];
 
     var c = $('#stave-canvas');
     this.width = c.width();
@@ -32,6 +35,23 @@ app.Stave = Backbone.View.extend({
       this.render();
     }, this);
 
+    this.sounds = [];
+    var that = this;
+
+    console.log('loading sounds');
+    for(i=0; i<(this.noteCount+1); i++) {
+      var sound = new buzz.sound("/sounds/"+i, {
+        formats: [ 'wav'],
+        preload: true,
+        autoplay: false,
+        loop: false
+      });
+      that.sounds.push(sound);
+    }
+
+    this.sounds.reverse(); // because stave goes bottom to top
+
+    console.log('sounds loaded');
     this.render();
   },
 
@@ -113,7 +133,7 @@ app.Stave = Backbone.View.extend({
       } 
     }, this);
     if(add) {
-      // TODO: coerece to a pitch on the y-axis
+      // coerece to a pitch on the y-axis
       var pitchIndex = this.getPitchIndexForEvent(event);
       console.log("Pitch index:", pitchIndex);
       // add a note
@@ -129,15 +149,25 @@ app.Stave = Backbone.View.extend({
 
     if (delta > 0) {
       this.playHeadPos = this.playHeadPos - 2;
+      if(this.direction == 'forward') {
+        this.direction = 'backward';
+        this.playedNotes = [];
+      }
     } else {
       this.playHeadPos = this.playHeadPos + 2;
+      if(this.direction == 'backward') {
+        this.direction = 'forward';
+        this.playedNotes = [];
+      }
     }
 
     if(this.playHeadPos < 0) {
       // loop back to end
       this.playHeadPos = this.width - (this.hPadding*2);
+      this.playedNotes = [];
     } else if(this.playHeadPos > (this.width-(this.hPadding*2))) {
       this.playHeadPos = 0;
+      this.playedNotes = [];
     }
 
     this.render();
@@ -146,9 +176,13 @@ app.Stave = Backbone.View.extend({
     var intersectingNotes = this.notesIntersectingX(this.absolutePlayHeadPos());
     console.log(intersectingNotes);
     // for each note it intersects with
+    var that = this;
     _.each(intersectingNotes, function(note) {
       // play that note
-      console.log("Play pitch", note.get('pitchIndex'));
+      if(!_.contains(that.playedNotes, note)) {
+        that.sounds[note.get('pitchIndex')].play();
+        that.playedNotes.push(note);
+      }
     });
   },
 
