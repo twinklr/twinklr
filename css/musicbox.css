@@ -1,0 +1,14 @@
+body {
+  background: #222;
+  color: #eee;
+}
+
+#container {
+  width: 960px;
+  margin: 0 auto;
+}
+
+canvas {
+  width: 960px;
+  height: 500px;
+}
