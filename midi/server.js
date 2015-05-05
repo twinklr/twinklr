@@ -1,7 +1,7 @@
 var express = require('express'),
     exphbs = require('express-handlebars'),
-    fs = require('fs'),
-    _ = require('underscore');
+    _ = require('underscore'),
+    midi = require('midi');
 
 var app = express(), handlebars;
 var logger = require('./logger');
@@ -11,6 +11,15 @@ if(process.env.NODE_ENV == 'production') {
 } else {
   logger.debugLevel = 'debug';
 }
+
+var midiOutput = new midi.output();
+midiOutput.openVirtualPort("Twinklr Midi Out");
+logger.log('debug','Opening MIDI port');
+
+process.on('exit', function() {
+  midiOutput.closePort();
+  logger.log('debug','Closing MIDI port');
+});
 
 // Create `ExpressHandlebars` instance with a default layout.
 handlebars = exphbs.create({
@@ -34,9 +43,23 @@ app.get('/', function(req, res){
   res.render('musicbox')
 });
 
+function scaleNote(index) {
+  // 0 is middle c;
+  var notes = [60,62,64,65,67,69,71,72];
+  return notes[index];
+}
+
 io.on('connection', function(socket){
   socket.on('note', function(data) {
-    logger.log('debug','got sent data '+data);
+    var note = scaleNote(data);
+    logger.log('debug','playing '+note);
+    midiOutput.sendMessage([144,note,100]);
+
+    setTimeout(function() {
+      // stop note a second later
+      logger.log('debug','stopping '+note);
+      midiOutput.sendMessage([128,note,100]);
+    }, 1000);
   });
 });
 

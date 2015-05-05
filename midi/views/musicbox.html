@@ -18,7 +18,6 @@
     <script type='text/javascript' src='/js/jquery-mousewheel.min.js'></script>
     <script type='text/javascript' src='/js/underscore-min.js'></script>
     <script type='text/javascript' src='/js/backbone-min.js'></script>
-    <script type='text/javascript' src='/js/buzz.min.js'></script>
     <script type='text/javascript' src='/js/models/note.js'></script>
     <script type='text/javascript' src='/js/collections/tune.js'></script>
     <script type='text/javascript' src='/js/views/stave.js'></script>
@@ -26,6 +25,7 @@
     <script type='text/javascript'>
       tune = new app.Tune();
       stave = new app.Stave(tune);
+      window.socket = io();
 
     </script>
   </body>
