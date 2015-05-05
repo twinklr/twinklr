@@ -35,23 +35,6 @@ app.Stave = Backbone.View.extend({
       this.render();
     }, this);
 
-    this.sounds = [];
-    var that = this;
-
-    console.log('loading sounds');
-    for(i=0; i<(this.noteCount+1); i++) {
-      var sound = new buzz.sound("/sounds/"+i, {
-        formats: [ 'wav'],
-        preload: true,
-        autoplay: false,
-        loop: false
-      });
-      that.sounds.push(sound);
-    }
-
-    this.sounds.reverse(); // because stave goes bottom to top
-
-    console.log('sounds loaded');
     this.render();
   },
 
@@ -180,7 +163,8 @@ app.Stave = Backbone.View.extend({
     _.each(intersectingNotes, function(note) {
       // play that note
       if(!_.contains(that.playedNotes, note)) {
-        that.sounds[note.get('pitchIndex')].play();
+        //that.sounds[note.get('pitchIndex')].play();
+        window.socket.emit('note', note.get('pitchIndex'));
         that.playedNotes.push(note);
       }
     });
