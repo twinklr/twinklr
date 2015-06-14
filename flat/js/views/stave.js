@@ -174,13 +174,15 @@ app.Stave = Backbone.View.extend({
 
     // if it intersects with any notes
     var intersectingNotes = this.notesIntersectingX(this.absolutePlayHeadPos());
-    console.log(intersectingNotes);
+    // console.log(intersectingNotes);
     // for each note it intersects with
     var that = this;
     _.each(intersectingNotes, function(note) {
       // play that note
       if(!_.contains(that.playedNotes, note)) {
-        that.sounds[note.get('pitchIndex')].play();
+        var pitchIndex = note.get('pitchIndex');
+        that.sounds[pitchIndex].play();
+        Backbone.trigger('notePlayed', pitchIndex);
         that.playedNotes.push(note);
       }
     });

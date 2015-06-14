@@ -10,6 +10,8 @@
 
       <p>Click to place or remove notes. Scroll with mousewheel/two-fingered scroll to play.</p>
 
+      <p><select style='display: none' id='outputportselector'></select></p>
+
       <canvas id="stave-canvas"></canvas>
     </div>
 
@@ -21,11 +23,15 @@
     <script type='text/javascript' src='/js/models/note.js'></script>
     <script type='text/javascript' src='/js/collections/tune.js'></script>
     <script type='text/javascript' src='/js/views/stave.js'></script>
+    <script type='text/javascript' src='/js/views/midi.js'></script>
 
     <script type='text/javascript'>
       tune = new app.Tune();
       stave = new app.Stave(tune);
-
+      
+      if(navigator.requestMIDIAccess) {
+        appMidi = new app.Midi();
+      }
     </script>
   </body>
 </html>
