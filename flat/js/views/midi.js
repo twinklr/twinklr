@@ -63,7 +63,3 @@ app.Midi = Backbone.View.extend({
     console.log("Midi error");
   }
 });
-
-
-// TODO:
-// work out what MIDI note to play.
