@@ -46,7 +46,8 @@ app.Stave = Backbone.View.extend({
         formats: [ 'mp3'],
         preload: true,
         autoplay: false,
-        loop: false
+        loop: false,
+        //webAudioApi: true
       });
       that.sounds.push(sound);
     }
@@ -180,9 +181,10 @@ app.Stave = Backbone.View.extend({
     // for each note it intersects with
     var that = this;
     _.each(intersectingNotes, function(note) {
-      // play that note
+       //play that note
       if(!_.contains(that.playedNotes, note)) {
         var pitchIndex = note.get('pitchIndex');
+        that.sounds[pitchIndex].stop();
         that.sounds[pitchIndex].play();
         Backbone.trigger('notePlayed', pitchIndex);
         that.playedNotes.push(note);
