@@ -13,7 +13,9 @@ app.Stave = Backbone.View.extend({
 
     this.playHeadPos = 0;
     this.currentNoteIndices = [];
-    this.noteCount = 7;
+    this.noteNames = ['c5','d5','e5','f5','g5','a5','b5',
+                     'c6','d6','e6','f6','g6','a6','b6','c7'];
+    this.noteCount = this.noteNames.length -1;
 
     this.direction = 'forward';
     this.playedNotes = [];
@@ -40,8 +42,8 @@ app.Stave = Backbone.View.extend({
 
     console.log('loading sounds');
     for(i=0; i<(this.noteCount+1); i++) {
-      var sound = new buzz.sound("/sounds/"+i, {
-        formats: [ 'wav'],
+      var sound = new buzz.sound("/sounds/"+that.noteNames[i], {
+        formats: [ 'mp3'],
         preload: true,
         autoplay: false,
         loop: false
