@@ -50,6 +50,7 @@ app.Stave = Backbone.View.extend({
         loop: false,
         //webAudioApi: true
       });
+      sound.setVolume(50);
       that.sounds.push(sound);
     }
 
