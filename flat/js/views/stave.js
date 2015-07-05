@@ -15,6 +15,7 @@ app.Stave = Backbone.View.extend({
     this.currentNoteIndices = [];
     this.noteNames = ['c5','d5','e5','f5','g5','a5','b5',
                      'c6','d6','e6','f6','g6','a6','b6','c7'];
+    this.noteColors = ['f5786b','ffce2a', 'feb2c4', 'c8d657', 'b03ca4', 'ffb326', '7ed4d2'];
     this.noteCount = this.noteNames.length -1;
 
     this.direction = 'forward';
@@ -67,17 +68,17 @@ app.Stave = Backbone.View.extend({
     var h = c.height();
 
     // draw the background
-    ctx.fillStyle = "#DBE3BC";
+    ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, w, h);
 
     // draw the staves
 
     // first, a box round the edge
-    ctx.strokeStyle = "#222";
+    ctx.strokeStyle = "#666";
     ctx.strokeRect(this.hPadding, this.vPadding, (this.width - this.hPadding*2), (this.height - this.vPadding*2));
 
     // next, a thick starting line
-    ctx.fillStyle = "#222";
+    ctx.fillStyle = "#666";
     ctx.fillRect(this.hPadding, this.vPadding, 5, (this.height - this.vPadding*2));
 
     // now, draw the right number of lines
@@ -98,12 +99,22 @@ app.Stave = Backbone.View.extend({
       if( (that.absolutePlayHeadPos() >= (note.get('x')-radius)) &&
         (that.absolutePlayHeadPos() < (note.get('x')+radius))
        ) {
-        ctx.fillStyle = 'rgb(156,20,21)' // red.
-      } else {
-        ctx.fillStyle = "#222";
+        ctx.strokeStyle = 'rgb(156,20,21)' // red.
+
+        // now draw the highlight
+        ctx.lineWidth = 8;
+        ctx.beginPath();
+        var x = note.get('x');
+        var y = note.get('y');
+        var startAngle = 0;
+        var endAngle = 2 * Math.PI
+        ctx.arc(x, y, radius, startAngle, endAngle);
+        ctx.stroke();
       }
 
-      // draw the blob itself.
+      var colorIndex = (that.noteCount - note.get('pitchIndex')) % 7;
+      ctx.fillStyle = "#" + that.noteColors[colorIndex];
+      // now draw the note
       ctx.beginPath();
       var x = note.get('x');
       var y = note.get('y');
