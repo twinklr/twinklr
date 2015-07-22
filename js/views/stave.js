@@ -5,6 +5,8 @@ app.Stave = Backbone.View.extend({
 
   events: {
     "click": "click",
+    "mousedown": "mousedown",
+    "mouseup": "mouseup",
     'mousewheel': 'mousewheel',
   },
 
@@ -159,6 +161,14 @@ app.Stave = Backbone.View.extend({
         this.collection.addNote(event.offsetX, event.offsetY, pitchIndex);
       }
     }
+  },
+
+  mousedown: function(event) {
+    $("canvas").addClass('mousedown');
+  },
+
+  mouseup: function(event) {
+    $("canvas").removeClass('mousedown');
   },
 
   mousewheel: function(event, delta) {
