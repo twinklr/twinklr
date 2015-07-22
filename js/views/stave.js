@@ -73,6 +73,8 @@ app.Stave = Backbone.View.extend({
     ctx.fillRect(0, 0, w, h);
 
     // draw the staves
+    
+    ctx.lineWidth = 1;
 
     // first, a box round the edge
     ctx.strokeStyle = "#666";
@@ -91,6 +93,15 @@ app.Stave = Backbone.View.extend({
       ctx.lineTo(w-this.hPadding, this.vPadding + (i * this.lineHeight));
       ctx.stroke();
     };
+
+    // draw the red line to indicate playhead position
+    ctx.beginPath();
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgb(156,20,12)' // red.
+    var playHeadPos = this.playHeadPos + this.hPadding;
+    ctx.moveTo(playHeadPos, 0);
+    ctx.lineTo(playHeadPos, h);
+    ctx.stroke();
 
     // for each note, draw a note
     this.collection.each(function(note) {
@@ -125,14 +136,6 @@ app.Stave = Backbone.View.extend({
       ctx.fill();
     });
 
-    // draw the red line to indicate playhead position
-    ctx.beginPath();
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = 'rgb(156,20,12)' // red.
-    var playHeadPos = this.playHeadPos + this.hPadding;
-    ctx.moveTo(playHeadPos, 0);
-    ctx.lineTo(playHeadPos, h);
-    ctx.stroke();
   },
 
   click: function(event) {
