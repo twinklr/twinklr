@@ -11,17 +11,71 @@ app.Stave = Backbone.View.extend({
   },
 
   initialize: function( tune ) {
-    this.collection = tune;
+    var that = this;
 
+    this.collection = tune;
     this.playHeadPos = 0;
     this.currentNoteIndices = [];
-    this.noteNames = ['c5','d5','e5','f5','g5','a5','b5',
-                     'c6','d6','e6','f6','g6','a6','b6','c7'];
-    this.noteColors = ['f5786b','ffce2a', 'feb2c4', 'c8d657', 'b03ca4', 'ffb326', '7ed4d2'];
-    this.noteCount = this.noteNames.length -1;
-
     this.direction = 'forward';
     this.playedNotes = [];
+
+    /*
+     * Set up events
+     */
+
+    this.collection.bind('change remove add reset', function() {
+      console.log('Re-rendering stave.');
+      this.render();
+    }, this);
+
+    /* 
+    * Set up sounds
+    * */
+
+    var noteNames = ['c5','d5','e5','f5','g5','a5','b5',
+                     'c6','d6','e6','f6','g6','a6','b6','c7'];
+
+    var noteColors = ['f5786b','ffce2a', 'feb2c4', 'c8d657', 'b03ca4', 'ffb326', '7ed4d2'];
+
+    console.log('loading sounds');
+
+    this.sounds = [];
+
+    for(i=0; i<noteNames.length; i++) {
+      var sound = new buzz.sound("/sounds/"+noteNames[i], {
+        formats: [ 'mp3'],
+        preload: true,
+        autoplay: false,
+        loop: false,
+      });
+      sound.setVolume(50);
+      that.sounds.push(sound);
+    }
+
+    this.sounds.reverse(); // because stave goes bottom to top
+
+    console.log('sounds loaded');
+
+    /*
+     * now set up a list of all possible notes
+     */
+
+    this.allNotes = [];
+
+    for(i=0; i<noteNames.length; i++) {
+      var noteData = {
+        name: noteNames[i],
+        color: noteColors[(noteNames.length - 1 - i) %7],
+        soundIndex: i
+      }
+      that.allNotes.push(noteData);
+    }
+
+    console.log("Allnotes:", this.allNotes);
+
+    /* 
+     * Set up stave visuals
+     */
 
     var c = $('#stave-canvas');
     this.width = c.width();
@@ -33,32 +87,13 @@ app.Stave = Backbone.View.extend({
     this.hPadding = 50;
 
     this.staveHeight = this.height - (this.vPadding*2);
-    this.lineHeight = this.staveHeight / this.noteCount;
+    this.lineHeight = this.staveHeight / (this.allNotes.length-1)
+    this.noteRadius = this.lineHeight/2;
 
-    this.collection.bind('change remove add reset', function() {
-      console.log('Re-rendering stave.');
-      this.render();
-    }, this);
+    /*
+     * And finally, an initial render.
+     */
 
-    this.sounds = [];
-    var that = this;
-
-    console.log('loading sounds');
-    for(i=0; i<(this.noteCount+1); i++) {
-      var sound = new buzz.sound("/sounds/"+that.noteNames[i], {
-        formats: [ 'mp3'],
-        preload: true,
-        autoplay: false,
-        loop: false,
-        //webAudioApi: true
-      });
-      sound.setVolume(50);
-      that.sounds.push(sound);
-    }
-
-    this.sounds.reverse(); // because stave goes bottom to top
-
-    console.log('sounds loaded');
     this.render();
   },
 
@@ -70,74 +105,11 @@ app.Stave = Backbone.View.extend({
     var w = c.width();
     var h = c.height();
 
-    // draw the background
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, w, h);
+    this.rendering.drawStave(ctx, w, h, this);
 
-    // draw the staves
-    
-    ctx.lineWidth = 1;
+    this.rendering.drawPlayHead(ctx, w, h, this);
 
-    // first, a box round the edge
-    ctx.strokeStyle = "#666";
-    ctx.strokeRect(this.hPadding, this.vPadding, (this.width - this.hPadding*2), (this.height - this.vPadding*2));
-
-    // next, a thick starting line
-    ctx.fillStyle = "#666";
-    ctx.fillRect(this.hPadding, this.vPadding, 5, (this.height - this.vPadding*2));
-
-    // now, draw the right number of lines
-
-    for (var i = this.noteCount - 1; i >= 0; i--) {
-      ctx.beginPath();
-      ctx.lineWidth = 1;
-      ctx.moveTo(this.hPadding, this.vPadding + (i * this.lineHeight));
-      ctx.lineTo(w-this.hPadding, this.vPadding + (i * this.lineHeight));
-      ctx.stroke();
-    };
-
-    // draw the red line to indicate playhead position
-    ctx.beginPath();
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = 'rgb(156,20,12)' // red.
-    var playHeadPos = this.playHeadPos + this.hPadding;
-    ctx.moveTo(playHeadPos, 0);
-    ctx.lineTo(playHeadPos, h);
-    ctx.stroke();
-
-    // for each note, draw a note
-    this.collection.each(function(note) {
-      var radius = that.lineHeight/2;
-
-      // if it's the highlighted note, make it red
-      if( (that.absolutePlayHeadPos() >= (note.get('x')-radius)) &&
-        (that.absolutePlayHeadPos() < (note.get('x')+radius))
-       ) {
-        ctx.strokeStyle = 'rgb(156,20,21)' // red.
-
-        // now draw the highlight
-        ctx.lineWidth = 8;
-        ctx.beginPath();
-        var x = note.get('x');
-        var y = note.get('y');
-        var startAngle = 0;
-        var endAngle = 2 * Math.PI
-        ctx.arc(x, y, radius, startAngle, endAngle);
-        ctx.stroke();
-      }
-
-      var colorIndex = (that.noteCount - note.get('pitchIndex')) % 7;
-      ctx.fillStyle = "#" + that.noteColors[colorIndex];
-      // now draw the note
-      ctx.beginPath();
-      var x = note.get('x');
-      var y = note.get('y');
-      var startAngle = 0;
-      var endAngle = 2 * Math.PI
-      ctx.arc(x, y, radius, startAngle, endAngle);
-      ctx.fill();
-    });
-
+    this.rendering.drawNotes(ctx, w, h, this);
   },
 
   click: function(event) {
@@ -152,13 +124,15 @@ app.Stave = Backbone.View.extend({
         add = false;
       } 
     }, this);
+
+    // and if we didn't intersect any notes, it's OK to add one.j<t_úX>
     if(add) {
       // coerece to a pitch on the y-axis
       var pitchIndex = this.getPitchIndexForEvent(event);
-      console.log("Pitch index:", pitchIndex);
       // add a note
-      if(pitchIndex >= 0 && pitchIndex <= this.noteCount) {
-        this.collection.addNote(event.offsetX, event.offsetY, pitchIndex);
+      if(pitchIndex >= 0 && pitchIndex < this.allNotes.length) {
+        console.log("Adding note", this.allNotes[pitchIndex]);
+        this.collection.addNote(event.offsetX, event.offsetY, this.allNotes[pitchIndex]);
       }
     }
   },
@@ -208,10 +182,9 @@ app.Stave = Backbone.View.extend({
     _.each(intersectingNotes, function(note) {
        //play that note
       if(!_.contains(that.playedNotes, note)) {
-        var pitchIndex = note.get('pitchIndex');
-        that.sounds[pitchIndex].stop();
-        that.sounds[pitchIndex].play();
-        Backbone.trigger('notePlayed', pitchIndex);
+        that.sounds[note.get('soundIndex')].stop();
+        that.sounds[note.get('soundIndex')].play();
+        Backbone.trigger('notePlayed', note.get('name'));
         that.playedNotes.push(note);
       }
     });
@@ -233,21 +206,97 @@ app.Stave = Backbone.View.extend({
     var noteX = note.get('x');
     var noteY = note.get('y');
 
-    var radius = this.lineHeight / 2;
-
-    return ((mouseX > noteX-radius) && 
-            (mouseX < noteX+radius) && 
-            (mouseY > noteY-radius) && 
-            (mouseY < noteY+ radius));
+    return ((mouseX > noteX-this.noteRadius) && 
+            (mouseX < noteX+this.noteRadius) && 
+            (mouseY > noteY-this.noteRadius) && 
+            (mouseY < noteY+ this.noteRadius));
   },
 
   notesIntersectingX: function(x) {
-    var radius = this.lineHeight / 2;
-
+    var that = this;
     return this.collection.filter(function(note) {
       var noteX = note.get('x');
 
-      return ((x > noteX-radius) && (x < noteX+radius))
+      return ((x > noteX-that.noteRadius) && (x < noteX+that.noteRadius))
     });
+  },
+
+  noteIsHighlighted: function(note) {
+    return (this.absolutePlayHeadPos() >= (note.get('x')-this.noteRadius)) &&
+      (this.absolutePlayHeadPos() < (note.get('x')+this.noteRadius));
+  },
+
+  rendering: {
+    drawStave: function(ctx, w, h, scope) {
+      // draw the background
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, w, h);
+
+      // draw the staves
+      
+      ctx.lineWidth = 1;
+
+      // first, a box round the edge
+      ctx.strokeStyle = "#666";
+      ctx.strokeRect(scope.hPadding, scope.vPadding, (scope.width - scope.hPadding*2), (scope.height - scope.vPadding*2));
+
+      // next, a thick starting line
+      ctx.fillStyle = "#666";
+      ctx.fillRect(scope.hPadding, scope.vPadding, 5, (scope.height - scope.vPadding*2));
+
+      // now, draw the right number of lines
+      console.log(scope);
+
+      for (var i = scope.allNotes.length-1; i >= 0; i--) {
+        ctx.beginPath();
+        ctx.lineWidth = 1;
+        ctx.moveTo(scope.hPadding, scope.vPadding + (i * scope.lineHeight));
+        ctx.lineTo(w-scope.hPadding, scope.vPadding + (i * scope.lineHeight));
+        ctx.stroke();
+      };
+
+    },
+
+    drawPlayHead(ctx,w,h,scope) {
+      // draw the red line to indicate playhead position
+      ctx.beginPath();
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgb(156,20,12)' // red.
+      var playHeadPos = scope.playHeadPos + scope.hPadding;
+      ctx.moveTo(playHeadPos, 0);
+      ctx.lineTo(playHeadPos, h);
+      ctx.stroke();
+
+    },
+
+    drawNotes(ctx,w,h,scope) {
+      // for each note, draw a note
+      scope.collection.each(function(note) {
+        // if it's the highlighted note, make it red
+        if(scope.noteIsHighlighted(note)) {
+          ctx.strokeStyle = 'rgb(156,20,21)' // red.
+
+          // now draw the highlight
+          ctx.lineWidth = 8;
+          ctx.beginPath();
+          var x = note.get('x');
+          var y = note.get('y');
+          var startAngle = 0;
+          var endAngle = 2 * Math.PI
+          ctx.arc(x, y, scope.noteRadius, startAngle, endAngle);
+          ctx.stroke();
+        }
+
+        ctx.fillStyle = "#" + note.get('color');
+        // now draw the note
+        ctx.beginPath();
+        var x = note.get('x');
+        var y = note.get('y');
+        var startAngle = 0;
+        var endAngle = 2 * Math.PI
+        ctx.arc(x, y, scope.noteRadius, startAngle, endAngle);
+        ctx.fill();
+      });
+    }
   }
 });

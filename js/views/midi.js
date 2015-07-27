@@ -4,7 +4,22 @@ app.Midi = Backbone.View.extend({
   initialize: function( tune ) {
     var that = this;
 
-    this.midiNotes = [60,62,64,65,67,69,71,72];
+    this.midiNotes = {'c5':72,
+      'd5':74,
+      'e5':76,
+      'f5':77,
+      'g5':79,
+      'a5':81,
+      'b5':83,
+      'c6':84,
+      'd6':86,
+      'e6':88,
+      'f6':89,
+      'g6':91,
+      'a6':93,
+      'b6':95,
+      'c7':96,
+    };
 
     window.addEventListener('load', function() {   
       navigator.requestMIDIAccess().then( 
@@ -12,28 +27,23 @@ app.Midi = Backbone.View.extend({
         that.onMIDISystemError );
     });
 
-    this.prevNoteIndex = null;
+    this.prevNote = null;
 
     Backbone.on('notePlayed', function(note) {
-      console.log("** Note", note);
+      console.log("** Midi Note", note, that.midiNotes[note]);
 
-      noteIndex = 7 - note;
-
-      if(app.midiAccess && app.midiAccess.outputs.size > 0) {
-        var currentPort = document.getElementById("outputportselector").value
-        var out = app.midiAccess.outputs.get(currentPort);
-
-        if(that.prevNoteIndex && that.prevNoteIndex != noteIndex) {
+      if(app.midiOut) {
+        if(that.prevNote && (that.prevNote != note)) {
           // send prev note off
-          out.send( [0x80, that.midiNotes[that.prevNoteIndex], 32] );          
+          app.midiOut.send( [0x80, that.midiNotes[note], 32] );          
         }
 
-        out.send( [0x90, that.midiNotes[noteIndex], 32] );
+        app.midiOut.send( [0x90, that.midiNotes[note], 32] );
 
         setTimeout(function() {
-          out.send( [0x80, that.midiNotes[noteIndex], 32] );          
+          app.midiOut.send( [0x80, that.midiNotes[note], 32] );          
         },5000)
-        that.prevNoteIndex = noteIndex;
+        that.prevNote = note;
 
       }
     });
@@ -44,19 +54,12 @@ app.Midi = Backbone.View.extend({
     console.log(midi.inputs.size);
     var outputCount = 0;
 
-    midi.outputs.forEach( function( key, port ) {
-      console.log(key,port);
-      var opt = document.createElement("option");
-      opt.text = [key.manufacturer,key.name].join(' ');
-      opt.value = port;
-      document.getElementById("outputportselector").add(opt);
-    });
-
-    if(midi.outputs.size > 0) {
-      $("#outputportselector").show();
-    }
-
     app.midiAccess = midi;
+    if(app.midiAccess.outputs.size > 0) {
+      var firstKey = app.midiAccess.outputs.keys().next().value;
+      app.midiOut = app.midiAccess.outputs.get(firstKey);
+      console.log("Set up midi out:", app.midiOut);
+    }
   },
 
   onMIDISystemError: function( midi ) {
