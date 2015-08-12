@@ -42,7 +42,7 @@ app.Stave = Backbone.View.extend({
     this.sounds = [];
 
     for(i=0; i<noteNames.length; i++) {
-      var sound = new buzz.sound("/sounds/"+noteNames[i], {
+      var sound = new buzz.sound("sounds/"+noteNames[i], {
         formats: [ 'mp3'],
         preload: true,
         autoplay: false,
@@ -64,7 +64,7 @@ app.Stave = Backbone.View.extend({
 
     for(i=0; i<noteNames.length; i++) {
       var noteData = {
-        name: noteNames[i],
+        name: noteNames[noteNames.length-1-i],
         color: noteColors[(noteNames.length - 1 - i) %7],
         soundIndex: i
       }
@@ -125,7 +125,7 @@ app.Stave = Backbone.View.extend({
       } 
     }, this);
 
-    // and if we didn't intersect any notes, it's OK to add one.j<t_úX>
+    // and if we didn't intersect any notes, it's OK to add one.
     if(add) {
       // coerece to a pitch on the y-axis
       var pitchIndex = this.getPitchIndexForEvent(event);
@@ -245,8 +245,6 @@ app.Stave = Backbone.View.extend({
       ctx.fillRect(scope.hPadding, scope.vPadding, 5, (scope.height - scope.vPadding*2));
 
       // now, draw the right number of lines
-      console.log(scope);
-
       for (var i = scope.allNotes.length-1; i >= 0; i--) {
         ctx.beginPath();
         ctx.lineWidth = 1;
