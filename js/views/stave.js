@@ -92,7 +92,7 @@ app.Stave = Backbone.View.extend({
 
     this.snap = Snap('#stave');
 
-    app.playhead = new app.Playhead(this.snap,this.width,this.height,this); 
+    //app.playhead = new app.Playhead(this.snap,this.width,this.height,this); 
 
     /*
      * And finally, an initial render.
@@ -112,9 +112,9 @@ app.Stave = Backbone.View.extend({
       this.rendering.drawStave(this.snap, w, h, this);
     }
 
-    if(!this.playhead) {
-      this.playhead = new app.Playhead(snap,w,h,this);
-    }
+    //if(!this.playhead) {
+      //this.playhead = new app.Playhead(snap,w,h,this);
+    //}
 
     //this.rendering.drawPlayHead(snap, w, h, this);
 
@@ -159,9 +159,9 @@ app.Stave = Backbone.View.extend({
     event.preventDefault();
 
     if (delta > 0) {
-      app.playhead.move(-2);
+      this.playhead.move(-2);
     } else {
-      app.playhead.move(+2);
+      this.playhead.move(+2);
     }
 
     if (delta > 0) {
