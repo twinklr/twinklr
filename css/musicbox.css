@@ -10,11 +10,16 @@ body {
   overflow-y: hidden;
 }
 
-canvas {
+svg {
   width: 100%;
   height: 100%;
+  background: #fff;
 }
 
-canvas.mousedown {
+svg.mousedown {
   cursor: none;
+}
+
+svg line#playhead {
+  stroke: rgb(156,20,12);
 }

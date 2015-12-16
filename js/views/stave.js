@@ -1,7 +1,6 @@
-var app = app || {};
-
+var app = app || {}; 
 app.Stave = Backbone.View.extend({
-  el: '#stave-canvas',
+  el: '#stave',
 
   events: {
     "click": "click",
@@ -77,18 +76,23 @@ app.Stave = Backbone.View.extend({
      * Set up stave visuals
      */
 
-    var c = $('#stave-canvas');
-    this.width = c.width();
-    this.height = c.height();
-    c.attr('width', c.width() );
-    c.attr('height', c.height() );
+    var svg = $('#stave');
+    this.width = svg.width();
+    this.height = svg.height();
+    svg.attr('width', svg.width() );
+    svg.attr('height', svg.height() );
 
     this.vPadding = 50;
     this.hPadding = 80;
 
+    this.staveWidth = this.width - (this.hPadding*2);
     this.staveHeight = this.height - (this.vPadding*2);
     this.lineHeight = this.staveHeight / (this.allNotes.length-1)
     this.noteRadius = this.lineHeight/2;
+
+    this.snap = Snap('#stave');
+
+    app.playhead = new app.Playhead(this.snap,this.width,this.height,this); 
 
     /*
      * And finally, an initial render.
@@ -100,16 +104,21 @@ app.Stave = Backbone.View.extend({
   render: function() {
     var that = this;
 
-    var c = $('#stave-canvas');
-    var ctx = c[0].getContext('2d');
-    var w = c.width();
-    var h = c.height();
+    var svg = $("svg#stave");
+    var w = svg.width();
+    var h = svg.height();
 
-    this.rendering.drawStave(ctx, w, h, this);
+    if(!this.hasStave) {
+      this.rendering.drawStave(this.snap, w, h, this);
+    }
 
-    this.rendering.drawPlayHead(ctx, w, h, this);
+    if(!this.playhead) {
+      this.playhead = new app.Playhead(snap,w,h,this);
+    }
 
-    this.rendering.drawNotes(ctx, w, h, this);
+    //this.rendering.drawPlayHead(snap, w, h, this);
+
+    //this.rendering.drawNotes(ctx, w, h, this);
   },
 
   click: function(event) {
@@ -148,6 +157,12 @@ app.Stave = Backbone.View.extend({
   mousewheel: function(event, delta) {
     // advance the playhead
     event.preventDefault();
+
+    if (delta > 0) {
+      app.playhead.move(-2);
+    } else {
+      app.playhead.move(+2);
+    }
 
     if (delta > 0) {
       this.playHeadPos = this.playHeadPos - 2;
@@ -227,44 +242,42 @@ app.Stave = Backbone.View.extend({
   },
 
   rendering: {
-    drawStave: function(ctx, w, h, scope) {
-      // draw the background
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, w, h);
-
-      // draw the staves
-      
-      ctx.lineWidth = 1;
+    drawStave: function(snap, w, h, scope) {
+      var lineWidth = 1;
+      var strokeStyle = "#666";
 
       // first, a box round the edge
-      ctx.strokeStyle = "#666";
-      ctx.strokeRect(scope.hPadding, scope.vPadding, (scope.width - scope.hPadding*2), (scope.height - scope.vPadding*2));
+      snap.rect(scope.hPadding, scope.vPadding, scope.staveWidth, scope.staveHeight).attr({stroke: strokeStyle,
+                                                                                                    fill: 'none'});
 
       // next, a thick starting line
-      ctx.fillStyle = "#666";
-      ctx.fillRect(scope.hPadding, scope.vPadding, 5, (scope.height - scope.vPadding*2));
+      var fill = "#666";
+      snap.rect(scope.hPadding, scope.vPadding, 5, scope.staveHeight).attr({fill: fill});
+
 
       // now, draw the right number of lines
       for (var i = scope.allNotes.length-1; i >= 0; i--) {
-        ctx.beginPath();
-        ctx.lineWidth = 1;
-        ctx.moveTo(scope.hPadding, scope.vPadding + (i * scope.lineHeight));
-        ctx.lineTo(w-scope.hPadding, scope.vPadding + (i * scope.lineHeight));
-        ctx.stroke();
+        var x1 = scope.hPadding;
+        var y1 = scope.vPadding + (i * scope.lineHeight);
+        var x2 = x1 + scope.staveWidth;
+        var y2 = scope.vPadding + (i * scope.lineHeight);
+        snap.line(x1,y1,x2,y2).attr({stroke: strokeStyle});
       };
-
+      
+      scope.hasStave = true;
     },
 
-    drawPlayHead(ctx,w,h,scope) {
-      // draw the red line to indicate playhead position
-      ctx.beginPath();
-      ctx.lineWidth = 1;
-      ctx.strokeStyle = 'rgb(156,20,12)' // red.
-      var playHeadPos = scope.playHeadPos + scope.hPadding;
-      ctx.moveTo(playHeadPos, 0);
-      ctx.lineTo(playHeadPos, h);
-      ctx.stroke();
+    drawPlayHead(snap,w,h,scope) {
+      // if no playhead
+      if(!scope.playhead) {
+        scope.playhead = snap.line(0,0,0,0).attr({id: 'playhead'});
 
+      }
+      var playHeadPos = scope.playHeadPos + scope.hPadding;
+      scope.playhead.attr({x1: playHeadPos,
+                          y1:0,
+                          x2:playHeadPos,
+                          y2: h});
     },
 
     drawNotes(ctx,w,h,scope) {
