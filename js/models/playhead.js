@@ -15,7 +15,7 @@ app.Playhead = function(staveSnap,width,height,scope) {
 
   var that = this;
 
-  this.on("mousewheelUpdate", function(delta) {
+  this.listenTo(scope, "mousewheelUpdate", function(delta) {
     if (delta > 0) {
       that.move(-2);
     } else {

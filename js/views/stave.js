@@ -4,6 +4,7 @@ app.Stave = Backbone.View.extend({
 
   events: {
     'mousewheel': 'mousewheel',
+    'click': 'click'
   },
 
   initialize: function( tune ) {
@@ -82,26 +83,14 @@ app.Stave = Backbone.View.extend({
     this.hasStave = true;
   },
 
-  absolutePlayHeadPos: function() {
-    return this.playHeadPos + this.hPadding;
-  },
-
-  getPitchIndexForEvent: function(event) {
-    var y = event.offsetY;
-
-    return Math.floor((y-(this.vPadding/2)) / this.lineHeight);
-  },
-
   noteIntersectsEvent: function(note,event) {
     var mouseX = event.offsetX;
     var mouseY = event.offsetY;
-    var noteX = note.get('x');
-    var noteY = note.get('y');
 
-    return ((mouseX > noteX-this.noteRadius) && 
-            (mouseX < noteX+this.noteRadius) && 
-            (mouseY > noteY-this.noteRadius) && 
-            (mouseY < noteY+ this.noteRadius));
+    return ((mouseX > note.absX()-this.noteRadius) && 
+            (mouseX < note.absX()+this.noteRadius) && 
+            (mouseY > note.absY()-this.noteRadius) && 
+            (mouseY < note.absY()+ this.noteRadius));
   },
 
   notesIntersectingX: function(x) {
@@ -120,7 +109,55 @@ app.Stave = Backbone.View.extend({
 
   mousewheel: function(event, delta) {
     event.preventDefault();
-    app.dispatcher.trigger('mousewheelUpdate', delta);
-  }
+    this.trigger('mousewheelUpdate', delta);
+  },
+
+  click: function(event) {
+    // TODO: if click lies inside a note, remove it
+    // tell the collection to add a note
+    // the collection might reject this based on where it is.
+    var add = true;
+
+    console.log("iterating over notes");
+
+    this.collection.each(function(note) {
+      // are the co-ords within that note? if so, remove that note
+      if(note && this.noteIntersectsEvent(note, event)) {
+        $("circle[data-cid="+note.cid+"]").remove();
+        this.collection.remove(note);
+        this.collection.sort();
+        add = false;
+      } else {
+        //console.log(event.offsetX,event.offsetY, "does not fall in", note.absX(),note.absY());
+      }
+    }, this);
+
+    
+    if(add && this.insideStave(event.offsetX, event.offsetY)) {
+      // we coerce to an index because that's calculated by the stave, visually
+      var x = event.offsetX - this.hPadding;
+      var y = event.offsetY - this.vPadding;
+
+      var pitchIndex = this.getPitchIndexForY(y);
+      console.log("Adding note at ", x,y,pitchIndex);
+      var n = this.collection.addNote(x,y, pitchIndex);
+
+    }
+  },
+
+  insideStave: function(offsetX, offsetY) {
+    var left = (offsetX - this.hPadding + (this.lineHeight/2)) > 0;
+    var top = (offsetY - this.vPadding + (this.lineHeight/2)) > 0;
+    var right = (offsetX - this.staveWidth- this.hPadding - (this.lineHeight/2)) < 0;
+    var bottom = (offsetY - this.staveHeight - this.vPadding - (this.lineHeight/2)) < 0;
+
+    return (top && bottom && left && right);
+  },
+
+  getPitchIndexForY: function(y) {
+    var lineIndex = Math.floor((y-(this.lineHeight/2)) / this.lineHeight) + 1;
+    // of course, that's counting from the top down. music is backwards:
+    return this.lineCount - lineIndex;
+  },
 
 });

@@ -2,6 +2,7 @@ var app = app || {};
 
 app.Tune = Backbone.Collection.extend({
     model: app.Note,
+    comparator: 'x',
 
     initialize: function() {
       this.noteNames = ['c5','d5','e5','f5','g5','a5','b5',
@@ -29,8 +30,6 @@ app.Tune = Backbone.Collection.extend({
         this.sounds.push(sound);
       }
 
-      this.sounds.reverse(); // because stave goes bottom to top
-
       console.log('sounds loaded');
 
       /*
@@ -49,14 +48,29 @@ app.Tune = Backbone.Collection.extend({
       }
 
       console.log("Allnotes:", this.allNotes);
+      this.on('add', function(addee) {
+        console.log("Added: ", addee);
+      });
+
+      this.on('add remove', this.sort);
+      
     },
 
-    addNote: function(x,y, data) {
-      this.add({
-        x:x,y:y,
-        name:data.name,
-        color: data.color,
-        soundIndex: data.soundIndex
+    addNote: function(x,y, index) {
+      var n = this.add({
+        x:x,
+        y:y,
+        name: this.noteNames[index],
+        color: this.colorForNoteIndex(index),
+        sound: this.sounds[index]
       });
+      this.trigger('noteMade', n);
+
+      var nv = new app.NoteView({model: n});
+    },
+
+    colorForNoteIndex: function(index) {
+      var i = index % 7;
+      return this.noteColors[i];
     }
 });
