@@ -23,3 +23,25 @@ svg.mousedown {
 svg line#playhead {
   stroke: rgb(156,20,12);
 }
+
+.note1 {
+  color: #f5786b;
+}
+.note2 {
+  color: #ffce2a;
+}
+.note3 {
+  color: #feb2c4;
+}
+.note4 {
+  color: #c8d657;
+}
+.note5 {
+  color: #b03ca4;
+}
+.note6 {
+  color: #ffb326;
+}
+.note7 {
+  color: #7ed4d2;
+}

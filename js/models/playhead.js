@@ -10,6 +10,19 @@ app.Playhead = function(staveSnap,width,height,scope) {
     scope.playhead = this.stave.line(0,0,0,0).attr({id: 'playhead'});
 
   }
+
+  _.extend(this, Backbone.Events);
+
+  var that = this;
+
+  this.on("mousewheelUpdate", function(delta) {
+    if (delta > 0) {
+      that.move(-2);
+    } else {
+      that.move(+2);
+    }
+  });
+
   this.render();
 }
 
@@ -27,8 +40,15 @@ app.Playhead.prototype = {
 
   move: function(amount) {
     this.playHeadPos = this.playHeadPos + amount;
-    this.render();
-  }
 
+    if(this.playHeadPos < 0) {
+      // loop back to end
+      this.playHeadPos = this.width - (this.scope.hPadding*2);
+    } else if(this.playHeadPos > (this.width-(this.scope.hPadding*2))) {
+      this.playHeadPos = 0;
+    }
+
+    this.render();
+  },
 };
 
