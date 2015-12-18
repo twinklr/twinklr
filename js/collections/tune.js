@@ -61,7 +61,8 @@ app.Tune = Backbone.Collection.extend({
         x:x,
         y:y,
         name: this.noteNames[index],
-        color: this.colorForNoteIndex(index),
+        index: index,
+        scaleIndex: index % 7,
         sound: this.sounds[index]
       });
       this.trigger('noteMade', n);

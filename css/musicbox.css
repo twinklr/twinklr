@@ -25,23 +25,28 @@ svg line#playhead {
 }
 
 .note1 {
-  color: #f5786b;
+  fill: #f5786b;
 }
 .note2 {
-  color: #ffce2a;
+  fill: #ffce2a;
 }
 .note3 {
-  color: #feb2c4;
+  fill: #feb2c4;
 }
 .note4 {
-  color: #c8d657;
+  fill: #c8d657;
 }
 .note5 {
-  color: #b03ca4;
+  fill: #b03ca4;
 }
 .note6 {
-  color: #ffb326;
+  fill: #ffb326;
 }
 .note7 {
-  color: #7ed4d2;
+  fill: #7ed4d2;
+}
+circle.highlighted {
+  stroke: darkred;
+  stroke-width: 5px;
+  z-index: 20;
 }

@@ -8,7 +8,8 @@ app.NoteView = Backbone.View.extend({
   },
 
   render: function() {
-    var c = window.stave.snap.circle(this.absX(), this.absY(),window.stave.noteRadius).attr({fill: this.color()}).attr('data-cid', this.model.cid)
+    var c = window.stave.snap.circle(this.absX(), this.absY(),window.stave.noteRadius).attr({'data-cid': this.model.cid,
+                                                                                            'class': this.noteClass()})
 
     var that = this;
 
@@ -31,4 +32,7 @@ app.NoteView = Backbone.View.extend({
   color: function() {
     return this.model.get('color');
   },
+  noteClass: function() {
+    return "note" + (this.model.get('scaleIndex') + 1);
+  }
 });

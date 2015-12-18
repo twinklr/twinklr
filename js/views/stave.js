@@ -118,21 +118,6 @@ app.Stave = Backbone.View.extend({
     // the collection might reject this based on where it is.
     var add = true;
 
-    //console.log("iterating over notes");
-
-    //this.collection.each(function(note) {
-      // are the co-ords within that note? if so, remove that note
-      //if(note && this.noteIntersectsEvent(note, event)) {
-        //$("circle[data-cid="+note.cid+"]").remove();
-        //this.collection.remove(note);
-        //this.collection.sort();
-        //add = false;
-      //} else {
-        //console.log(event.offsetX,event.offsetY, "does not fall in", note.absX(),note.absY());
-      //}
-    //}, this);
-
-    
     if(add && this.insideStave(event.offsetX, event.offsetY)) {
       // we coerce to an index because that's calculated by the stave, visually
       var x = event.offsetX - this.hPadding;
@@ -141,7 +126,6 @@ app.Stave = Backbone.View.extend({
       var pitchIndex = this.getPitchIndexForY(y);
       console.log("Adding note at ", x,y,pitchIndex);
       var n = this.collection.addNote(x,y, pitchIndex);
-
     }
   },
 
