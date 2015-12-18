@@ -118,19 +118,19 @@ app.Stave = Backbone.View.extend({
     // the collection might reject this based on where it is.
     var add = true;
 
-    console.log("iterating over notes");
+    //console.log("iterating over notes");
 
-    this.collection.each(function(note) {
+    //this.collection.each(function(note) {
       // are the co-ords within that note? if so, remove that note
-      if(note && this.noteIntersectsEvent(note, event)) {
-        $("circle[data-cid="+note.cid+"]").remove();
-        this.collection.remove(note);
-        this.collection.sort();
-        add = false;
-      } else {
+      //if(note && this.noteIntersectsEvent(note, event)) {
+        //$("circle[data-cid="+note.cid+"]").remove();
+        //this.collection.remove(note);
+        //this.collection.sort();
+        //add = false;
+      //} else {
         //console.log(event.offsetX,event.offsetY, "does not fall in", note.absX(),note.absY());
-      }
-    }, this);
+      //}
+    //}, this);
 
     
     if(add && this.insideStave(event.offsetX, event.offsetY)) {

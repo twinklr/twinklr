@@ -9,3 +9,8 @@ app.dispatcher.on('mousewheelUpdate', function(delta) {
 app.dispatcher.on('noteMade', function(delta) {
   window.playhead.trigger('mousewheelUpdate', delta);
 });
+
+app.dispatcher.on('noteRemoved', function(note) {
+  window.tune.remove(note);
+  console.log("Removing note from tune");
+});
