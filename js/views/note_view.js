@@ -8,15 +8,19 @@ app.NoteView = Backbone.View.extend({
   },
 
   render: function() {
-    var c = window.stave.snap.circle(this.absX(), this.absY(),window.stave.noteRadius).attr({'data-cid': this.model.cid,
-                                                                                            'class': this.noteClass()})
+    var c = window.stave.snap.circle(this.absX(),
+                                     this.absY(),
+                                     0).attr({'data-cid': this.model.cid,
+                                                                                            'class': this.noteClass()}).animate({r: window.stave.noteRadius}, 30);
 
     var that = this;
 
     $("circle[data-cid="+this.model.cid+"]").on('click', function(e) {
       app.dispatcher.trigger('noteRemoved', that.model);
-      $(this).remove(); // remove the jQuery element
-      that.remove(); // remove the view
+      Snap(this).animate({r: 0}, 50, function() {
+        $(this).remove(); // remove the jQuery element
+        that.remove(); // remove the view
+      });
       e.stopPropagation();
     });
     
