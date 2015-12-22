@@ -47,6 +47,6 @@ svg line#playhead {
 }
 circle.highlighted {
   stroke: darkred;
-  stroke-width: 5px;
+  stroke-width: 0px;
   z-index: 20;
 }

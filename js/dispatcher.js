@@ -14,3 +14,7 @@ app.dispatcher.on('noteRemoved', function(note) {
   window.tune.remove(note);
   console.log("Removing note from tune");
 });
+
+app.dispatcher.on('playheadMoved', function(pos) {
+  window.stave.playNotesAt(pos);
+});

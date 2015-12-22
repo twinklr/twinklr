@@ -63,7 +63,6 @@ app.Tune = Backbone.Collection.extend({
         name: this.noteNames[index],
         index: index,
         scaleIndex: index % 7,
-        sound: this.sounds[index]
       });
       this.trigger('noteMade', n);
 
@@ -73,5 +72,13 @@ app.Tune = Backbone.Collection.extend({
     colorForNoteIndex: function(index) {
       var i = index % 7;
       return this.noteColors[i];
+    },
+
+    play: function(note) {
+      if(!note.get('playing')) {
+        this.sounds[note.get('index')].stop();
+        this.sounds[note.get('index')].play();
+        note.set('playing', true);
+      }
     }
 });

@@ -49,6 +49,7 @@ app.Playhead.prototype = {
     }
 
     this.render();
+    app.dispatcher.trigger('playheadMoved', this.playHeadPos);
   },
 };
 

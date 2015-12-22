@@ -93,18 +93,9 @@ app.Stave = Backbone.View.extend({
             (mouseY < note.absY()+ this.noteRadius));
   },
 
-  notesIntersectingX: function(x) {
-    var that = this;
-    return this.collection.filter(function(note) {
-      var noteX = note.get('x');
-
-      return ((x > noteX-that.noteRadius) && (x < noteX+that.noteRadius))
-    });
-  },
-
-  noteIsHighlighted: function(note) {
-    return (this.absolutePlayHeadPos() >= (note.get('x')-this.noteRadius)) &&
-      (this.absolutePlayHeadPos() < (note.get('x')+this.noteRadius));
+  noteIntersectsPos: function(note,pos) {
+    return (pos >= (note.get('x')-this.noteRadius)) &&
+      (pos < (note.get('x')+this.noteRadius));
   },
 
   mousewheel: function(event, delta) {
@@ -143,5 +134,33 @@ app.Stave = Backbone.View.extend({
     // of course, that's counting from the top down. music is backwards:
     return this.lineCount - lineIndex;
   },
+
+  playNotesAt: function(pos) {
+    var that = this;
+    
+    // for each note
+    this.collection.each(function(note, i) {
+      var noteX = note.get('x');
+
+      if(that.noteIntersectsPos(note,pos)) {
+
+        that.collection.play(note);
+        
+        var noteObject = Snap("circle[data-cid="+note.cid+"]");
+        if(!noteObject.hasClass('highlighted')) {
+          noteObject.addClass('highlighted');
+          noteObject.animate({strokeWidth: 5}, 50);
+        }
+      } else {
+        note.set('playing', false);
+        var noteObject = Snap("circle[data-cid="+note.cid+"]");
+        if(noteObject.hasClass('highlighted')) {
+          noteObject.animate({strokeWidth: 0}, 150, function() {
+            noteObject.removeClass('highlighted');
+          });
+        }
+      }
+    });
+  }
 
 });

@@ -6,5 +6,6 @@ app.Note = Backbone.Model.extend({
   },
   absY: function() {
     return this.get('y') + window.stave.vPadding;
-  }
+  },
+
 });
