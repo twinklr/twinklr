@@ -107,6 +107,10 @@ app.Stave = Backbone.View.extend({
     // TODO: if click lies inside a note, remove it
     // tell the collection to add a note
     // the collection might reject this based on where it is.
+    if(app.dim) {
+      return;
+    }
+
     var add = true;
 
     if(add && this.insideStave(event.offsetX, event.offsetY)) {

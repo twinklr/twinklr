@@ -15,8 +15,16 @@
           <li><a href='#' id='sequence-length'>Sequence Length</a></li>
           <li><a href='#' id='save-load'>Save/Load</a></li>
         </ul>
+        <div id='ui-details'>
+          <div class='inner'>
+          </div>
+        </div>
       </div>
     </div>
+
+    <script id='template-alter-sequence-length' type="text/template">
+      Adjust sequence length. <a href='#' class='hide-ui'>Done</a>
+    </script>
 
     <script type='text/javascript'>
       <!--window.$ = window.jQuery = require('./js/jquery.min.js');-->
@@ -49,11 +57,45 @@
           appMidi = new app.Midi();
         }
 
-        $("#ui a").click(function() {
-          alert($(this).attr('id'));
+        $("#ui .buttons a").click(function() {
+          var id = $(this).attr('id');
+          app.editMode = id;
+
+          dimNotes();
+
+          $("#ui-details .inner").html($('#template-'+id).html());
+          $("#ui-details").css('bottom', -100);
+          $("#ui-details").show();
+
+          $("#ui-details").animate({bottom: 0});
+
           return false;
         });
+        $("#ui").on('click', '.hide-ui',function() {
+          unDimNotes();
+          app.editMode = null;
+          $("#ui-details").animate({bottom: -100}, function() {
+            $("#ui-details").hide();
+            $("#ui-details .inner").html('');
+          });
+        });
       });
+
+      function dimNotes() {
+        $("circle").each(function(i) {
+          Snap(this).animate({opacity: 0.3}, 150);
+          Snap(this).addClass('dim');
+        });
+        app.dim = true;
+      }
+
+      function unDimNotes() {
+        $("circle").each(function(i) {
+          Snap(this).animate({opacity: 1.0}, 150);
+          Snap(this).removeClass('dim');
+        });
+        app.dim = false;
+      }
     </script>
   </body>
 </html>

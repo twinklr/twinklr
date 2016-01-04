@@ -16,6 +16,10 @@ app.NoteView = Backbone.View.extend({
     var that = this;
 
     $("circle[data-cid="+this.model.cid+"]").on('click', function(e) {
+      if(app.dim) {
+        return;
+      }
+
       app.dispatcher.trigger('noteRemoved', that.model);
       Snap(this).animate({r: 0}, 50, function() {
         $(this).remove(); // remove the jQuery element
