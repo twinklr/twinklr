@@ -37,7 +37,7 @@ app.Stave = Backbone.View.extend({
     this.hPadding = 80;
 
     this.staveWidth = this.width - (this.hPadding*2);
-    this.staveHeight = this.height - (this.vPadding*2);
+    this.staveHeight = this.height - (this.vPadding*3);
     this.lineHeight = this.staveHeight / (this.lineCount)
     this.noteRadius = this.lineHeight/2;
 

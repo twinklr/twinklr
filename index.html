@@ -7,6 +7,15 @@
 
     <div id="container">
       <svg xmlns='http://www.w3.org/2000/svg' id="stave"></svg>
+      <div id='ui'>
+        <ul class='buttons'>
+          <li><a href='#' id='alter-sequence-length'>Sequence Length</a></li>
+          <li><a href='#' id='scale-options'>Scale</a></li>
+          <li><a href='#' id='midi-options'>MIDI</a></li>
+          <li><a href='#' id='sequence-length'>Sequence Length</a></li>
+          <li><a href='#' id='save-load'>Save/Load</a></li>
+        </ul>
+      </div>
     </div>
 
     <script type='text/javascript'>
@@ -31,13 +40,20 @@
     <script type='text/javascript' src='./js/views/midi.js'></script>
 
     <script type='text/javascript'>
-      window.tune = new app.Tune();
-      window.stave = new app.Stave(tune);
-      window.playhead = new app.Playhead(stave.snap,stave.width,stave.height,stave);
-      
-      if(navigator.requestMIDIAccess) {
-        appMidi = new app.Midi();
-      }
+      $(document).ready(function() {
+        window.tune = new app.Tune();
+        window.stave = new app.Stave(tune);
+        window.playhead = new app.Playhead(stave.snap,stave.width,stave.height,stave);
+        
+        if(navigator.requestMIDIAccess) {
+          appMidi = new app.Midi();
+        }
+
+        $("#ui a").click(function() {
+          alert($(this).attr('id'));
+          return false;
+        });
+      });
     </script>
   </body>
 </html>
