@@ -18,3 +18,8 @@ app.dispatcher.on('noteRemoved', function(note) {
 app.dispatcher.on('playheadMoved', function(pos) {
   window.stave.playNotesAt(pos);
 });
+
+app.dispatcher.on('widthUpdated', function(pos) {
+  window.stave.updateWidth(event.offsetX);
+  window.playhead.updateWidth(event.offsetX);
+});

@@ -41,6 +41,8 @@ app.Playhead.prototype = {
   move: function(amount) {
     this.playHeadPos = this.playHeadPos + amount;
 
+    console.log("Moving, with a width of", this.width);
+
     if(this.playHeadPos < 0) {
       // loop back to end
       this.playHeadPos = this.width - (this.scope.hPadding*2);
@@ -51,5 +53,20 @@ app.Playhead.prototype = {
     this.render();
     app.dispatcher.trigger('playheadMoved', this.playHeadPos);
   },
+  updateWidth: function(offsetWidth) {
+    // calculate width
+    //var newPos = 0;
+    var newWidth = offsetWidth;
+    console.log(this.width);
+    this.width = newWidth + (this.scope.hPadding);
+
+    //console.log(this.playHeadPos, (this.width 
+
+    if(this.playHeadPos > (this.width - (2*this.scope.hPadding))) {
+      this.playHeadPos = this.width - (2*this.scope.hPadding);
+    }
+
+    this.render();
+  }
 };
 

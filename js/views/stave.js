@@ -3,8 +3,11 @@ app.Stave = Backbone.View.extend({
   el: '#stave',
 
   events: {
+    'mousemove': 'mousemove',
+    'mousedown': 'mousedown',
+    'mouseup': 'mouseup',
     'mousewheel': 'mousewheel',
-    'click': 'click'
+    'click': 'click',
   },
 
   initialize: function( tune ) {
@@ -56,19 +59,23 @@ app.Stave = Backbone.View.extend({
     var lineWidth = 1;
     var strokeStyle = "#666";
 
+    $("rect.stave").remove();
+    $("line.stave-line").remove();
+    $("rect.stave-end").remove();
+
     // first, a box round the edge
     this.snap.rect(this.hPadding, 
                    this.vPadding, 
                    this.staveWidth, 
                    this.staveHeight).attr({stroke: strokeStyle, 
-                                           fill: 'none'});
+                                           fill: 'none'}).addClass('stave');
 
     // next, a thick starting line
     var fill = "#666";
     this.snap.rect(this.hPadding,
                    this.vPadding, 
                    5, 
-                   this.staveHeight).attr({fill: fill});
+                   this.staveHeight).attr({fill: fill}).addClass('stave-end');
 
 
     // now, draw the right number of lines
@@ -77,8 +84,16 @@ app.Stave = Backbone.View.extend({
       var y1 = this.vPadding + (i * this.lineHeight);
       var x2 = x1 + this.staveWidth;
       var y2 = this.vPadding + (i * this.lineHeight);
-      this.snap.line(x1,y1,x2,y2).attr({stroke: strokeStyle});
+      this.snap.line(x1,y1,x2,y2).attr({stroke: strokeStyle}).addClass('stave-line');
     };
+
+    // now stick them all at the beginning of the element, to layer them
+    // correctly
+    var lines = Snap.selectAll('line');
+    _.each(lines, function(line) {
+      var l = line.remove();
+      that.snap.prepend(l);
+    });
 
     this.hasStave = true;
   },
@@ -124,6 +139,21 @@ app.Stave = Backbone.View.extend({
     }
   },
 
+  mousemove: function(event) {
+    if((app.editMode == 'alter-sequence-length') && this.mouseIsDown) {
+      //console.log(event.offsetX);
+      app.dispatcher.trigger('widthUpdated', event.offsetX);
+    }
+  },
+
+  mousedown: function (event) {
+    this.mouseIsDown = true;
+  },
+
+  mouseup: function (event) {
+    this.mouseIsDown = false;
+  },
+
   insideStave: function(offsetX, offsetY) {
     var left = (offsetX - this.hPadding + (this.lineHeight/2)) > 0;
     var top = (offsetY - this.vPadding + (this.lineHeight/2)) > 0;
@@ -165,6 +195,22 @@ app.Stave = Backbone.View.extend({
         }
       }
     });
+  },
+
+  updateWidth: function(offsetWidth) {
+    var finalOffset = 0;
+    if(offsetWidth > (this.width - this.hPadding)) {
+      // if the offset is off to the right
+      finalOffset = 0;
+    } else if(offsetWidth < (this.hPadding + 250)) {
+      // if the offset is too narrow
+      finalOffset = this.width - 250 - this.hPadding;
+    } else {
+      finalOffset = this.width - offsetWidth - this.hPadding;
+    }
+
+    this.staveWidth = this.width - (this.hPadding*2) - finalOffset;
+    this.render();
   }
 
 });
