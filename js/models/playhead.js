@@ -60,7 +60,7 @@ app.Playhead.prototype = {
     console.log(this.width);
     this.width = newWidth + (this.scope.hPadding);
 
-    //console.log(this.playHeadPos, (this.width 
+    // TODO: now add cases for playhead off left or right
 
     if(this.playHeadPos > (this.width - (2*this.scope.hPadding))) {
       this.playHeadPos = this.width - (2*this.scope.hPadding);

@@ -204,7 +204,7 @@ app.Stave = Backbone.View.extend({
       finalOffset = 0;
     } else if(offsetWidth < (this.hPadding + 250)) {
       // if the offset is too narrow
-      finalOffset = this.width - 250 - this.hPadding;
+      finalOffset = this.width - 250 - this.hPadding - this.hPadding;
     } else {
       finalOffset = this.width - offsetWidth - this.hPadding;
     }
