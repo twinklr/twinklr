@@ -211,6 +211,6 @@ app.Stave = Backbone.View.extend({
 
     this.staveWidth = this.width - (this.hPadding*2) - finalOffset;
     this.render();
-  }
+  }, 
 
 });
