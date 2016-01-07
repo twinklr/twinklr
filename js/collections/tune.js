@@ -67,6 +67,7 @@ app.Tune = Backbone.Collection.extend({
       this.trigger('noteMade', n);
 
       var nv = new app.NoteView({model: n});
+      app.noteViewManager.add(nv);
     },
 
     colorForNoteIndex: function(index) {

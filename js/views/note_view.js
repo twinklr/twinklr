@@ -19,15 +19,21 @@ app.NoteView = Backbone.View.extend({
       if(app.dim) {
         return;
       }
-
-      app.dispatcher.trigger('noteRemoved', that.model);
-      Snap(this).animate({r: 0}, 50, function() {
-        $(this).remove(); // remove the jQuery element
-        that.remove(); // remove the view
-      });
+      app.dispatcher.trigger('removeNote', that.model);
       e.stopPropagation();
     });
     
+  },
+
+  removeSvg: function() {
+    var that = this;
+
+    var thisNoteSvg = $("circle[data-cid="+this.model.cid+"]")[0];
+
+    Snap(thisNoteSvg).animate({r: 0}, 50, function() {
+      $(this).remove(); // remove the jQuery element
+      that.remove(); // remove the view
+    });
   },
 
   absX: function() {

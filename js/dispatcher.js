@@ -10,8 +10,9 @@ app.dispatcher.on('noteMade', function(delta) {
   window.playhead.trigger('mousewheelUpdate', delta);
 });
 
-app.dispatcher.on('noteRemoved', function(note) {
+app.dispatcher.on('removeNote', function(note) {
   window.tune.remove(note);
+  app.noteViewManager.deleteNoteView(note.cid);
   console.log("Removing note from tune");
 });
 
@@ -36,10 +37,6 @@ app.dispatcher.on('tidyNotes', function() {
   console.log(notes.length, 'notes to tidy');
 
   _.each(notes, function(note) {
-    app.dispatcher.trigger('noteRemoved', note);
-    var noteCircle = $("circle[data-cid="+note.cid+"]");
-    Snap(noteCircle[0]).animate({r: 0}, 50, function() {
-      $(this).remove(); // remove the jQuery element
-    });
+    app.dispatcher.trigger('removeNote', note);
   });
 });
