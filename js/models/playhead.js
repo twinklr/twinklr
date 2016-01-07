@@ -54,13 +54,20 @@ app.Playhead.prototype = {
     app.dispatcher.trigger('playheadMoved', this.playHeadPos);
   },
   updateWidth: function(offsetWidth) {
-    // calculate width
-    //var newPos = 0;
-    var newWidth = offsetWidth;
-    console.log(this.width);
-    this.width = newWidth + (this.scope.hPadding);
+    // if we drag beyond the maximum length of the stave,
+    // set width to maximum length of Stave
+    if(offsetWidth > this.scope.width - this.scope.hPadding) {
+      offsetWidth = this.scope.width - this.scope.hPadding;
+    }
 
-    // TODO: now add cases for playhead off left or right
+    // if we drag less than 250, set width to 250;
+    if(offsetWidth < (this.scope.hPadding + 250)) {
+      offsetWidth = 250 + this.scope.hPadding;
+    }
+
+    // now add the padding back on, because the width of the playhead
+    // is (perhaps foolishly) the screen width
+    this.width = offsetWidth + (this.scope.hPadding);
 
     if(this.playHeadPos > (this.width - (2*this.scope.hPadding))) {
       this.playHeadPos = this.width - (2*this.scope.hPadding);
