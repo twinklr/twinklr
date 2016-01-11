@@ -20,6 +20,16 @@ app.dispatcher.on('playheadMoved', function(pos) {
   window.stave.playNotesAt(pos);
 });
 
+app.dispatcher.on('changedDirection', function() {
+  app.soundBox.clearPlayedNotes();
+});
+
+app.dispatcher.on('playNote', function(note) {
+  console.log("trying to play", note);
+  app.soundBox.playNote(note);
+  // todo: do midi too here.
+});
+
 app.dispatcher.on('widthUpdated', function(pos) {
   window.stave.updateWidth(event.offsetX);
   window.playhead.updateWidth(event.offsetX);

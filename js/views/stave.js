@@ -15,7 +15,7 @@ app.Stave = Backbone.View.extend({
 
     this.collection = tune;
 
-    this.noteCount = this.collection.allNotes.length;
+    this.noteCount = 15;
     this.lineCount = this.noteCount - 1;
 
     /*
@@ -178,7 +178,7 @@ app.Stave = Backbone.View.extend({
 
       if(that.noteIntersectsPos(note,pos)) {
 
-        that.collection.play(note);
+        app.dispatcher.trigger('playNote', note);
         
         var noteObject = Snap("circle[data-cid="+note.cid+"]");
         if(!noteObject.hasClass('highlighted')) {

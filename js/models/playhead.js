@@ -6,6 +6,7 @@ app.Playhead = function(staveSnap,width,height,scope) {
   this.height = height;
   this.scope = scope;
   this.playHeadPos = 0;
+  this.forwards = true;
   if(!scope.playhead) {
     scope.playhead = this.stave.line(0,0,0,0).attr({id: 'playhead'});
 
@@ -18,8 +19,16 @@ app.Playhead = function(staveSnap,width,height,scope) {
   this.listenTo(scope, "mousewheelUpdate", function(delta) {
     if (delta > 0) {
       that.move(-2);
+      if(this.forwards) {
+        app.dispatcher.trigger('changedDirection');
+        this.forwards = false;
+      }
     } else {
       that.move(+2);
+      if(!this.forwards) {
+        app.dispatcher.trigger('changedDirection');
+        this.forwards = true;
+      }
     }
   });
 
