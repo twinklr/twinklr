@@ -55,8 +55,11 @@ app.Playhead.prototype = {
     if(this.playHeadPos < 0) {
       // loop back to end
       this.playHeadPos = this.width - (this.scope.hPadding*2);
+      app.dispatcher.trigger('playheadLoopAround');
     } else if(this.playHeadPos > (this.width-(this.scope.hPadding*2))) {
       this.playHeadPos = 0;
+      app.dispatcher.trigger('playheadLoopAround');
+    } else if(this.playHeadPos > (this.width-(this.scope.hPadding*2))) {
     }
 
     this.render();

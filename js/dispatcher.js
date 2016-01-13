@@ -10,6 +10,10 @@ app.dispatcher.on('noteMade', function(delta) {
   window.playhead.trigger('mousewheelUpdate', delta);
 });
 
+app.dispatcher.on('playheadLoopAround', function(delta) {
+  app.soundBox.clearPlayedNotes();
+});
+
 app.dispatcher.on('removeNote', function(note) {
   window.tune.remove(note);
   app.noteViewManager.deleteNoteView(note.cid);
