@@ -2,6 +2,8 @@ body {
   background: #222;
   color: #eee;
   margin: 0;
+  font-family: "Droid Sans", sans-serif;
+  overflow: hidden;
 }
 
 #container {
@@ -83,10 +85,14 @@ circle.highlighted {
   text-align: center;
 }
 
-#ui ul.buttons li a:link, #ui ul.buttons li a:visited {
+#ui li a:link, #ui li a:visited {
+  text-decoration: none;
+  color: black;
 }
 
-#ui ul.buttons li a:hover {
+#ui li a:hover {
+  text-decoration: none;
+  color: black;
   background: #eee;
 }
 
