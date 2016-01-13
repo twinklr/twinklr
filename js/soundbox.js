@@ -6,7 +6,9 @@ app.soundBox = {
 
   playedNotes: [],
 
-  setupSounds: function() {
+  setup: function() {
+    this.scaleType = 'major';
+    this.scaleRoot = 'c';
     this.sounds = [];
 
     for(i=0; i<this.noteNames.length; i++) {
@@ -38,4 +40,4 @@ app.soundBox = {
 
 }
 
-app.soundBox.setupSounds();
+app.soundBox.setup();

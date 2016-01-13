@@ -28,7 +28,7 @@
     <script id='template-scale-options' type="text/template">
       <b>Scale options</b>
       Root note:
-      <select name='root'>
+      <select id='scale-root' name='root'>
         <option value='c'>C</option>
         <option value='g'>G</option>
         <option value='d'>D</option>
@@ -43,7 +43,7 @@
         <option value='f'>F</option>
       </select>
       Scale:
-      <select name='scale'>
+      <select id='scale-type' name='scale'>
         <option value='major'>Major</option>
         <option value='minor'>Minor</option>
         <option value='dorian'>Dorian</option>
@@ -115,6 +115,13 @@
 
           app.dispatcher.trigger('tidyNotes');
           return false;
+        });
+
+        $("#ui").on('change', '#scale-root', function() {
+          app.soundBox.scaleRoot = $(this).val();
+        });
+        $("#ui").on('change', '#scale-type', function() {
+          app.soundBox.scaleType = $(this).val();
         });
       });
 
