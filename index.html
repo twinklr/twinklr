@@ -25,6 +25,39 @@
       Adjust sequence length. <a href='#' class='hide-ui'>Done</a>
     </script>
 
+    <script id='template-scale-options' type="text/template">
+      <b>Scale options</b>
+      Root note:
+      <select name='root'>
+        <option value='c'>C</option>
+        <option value='g'>G</option>
+        <option value='d'>D</option>
+        <option value='a'>A</option>
+        <option value='e'>E</option>
+        <option value='b'>B</option>
+        <option value='f#'>F#</option>
+        <option value='c#'>C#</option>
+        <option value='g#'>A♭</option>
+        <option value='d#'>E♭</option>
+        <option value='a#'>B♭</option>
+        <option value='f'>F</option>
+      </select>
+      Scale:
+      <select name='scale'>
+        <option value='major'>Major</option>
+        <option value='minor'>Minor</option>
+        <option value='dorian'>Dorian</option>
+        <option value='lydian'>Lydian</option>
+        <option value='mixolydian'>Mixolydian</option>
+        <option value='phrygian'>Phrygian</option>
+        <option value='locrian'>Locrian</option>
+        <option value='pentatonic'>Pentatonic</option>
+        <option value='blues'>Blues</option>
+      </select>
+
+      <a href="#" class='hide-ui'>Done</a>
+    </script>
+
     <script type='text/javascript'>
       <!--window.$ = window.jQuery = require('./js/jquery.min.js');-->
       <!--window.buzz = require('./js/buzz.min.js');-->
