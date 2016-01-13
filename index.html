@@ -118,10 +118,10 @@
         });
 
         $("#ui").on('change', '#scale-root', function() {
-          app.soundBox.scaleRoot = $(this).val();
+          app.soundBox.updateScaleRoot($(this).val());
         });
         $("#ui").on('change', '#scale-type', function() {
-          app.soundBox.scaleType = $(this).val();
+          app.soundBox.updateScaleType($(this).val());
         });
       });
 

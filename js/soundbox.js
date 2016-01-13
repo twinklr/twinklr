@@ -36,7 +36,15 @@ app.soundBox = {
 
   clearPlayedNotes: function() {
     this.playedNotes = [];
-  }
+  },
+
+  updateScaleRoot: function(root) {
+    this.scaleRoot = root;
+  },
+
+  updateScaleType: function(type) {
+    this.scaleType = type;
+  },
 
 }
 
