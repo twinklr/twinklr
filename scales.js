@@ -1,4 +1,4 @@
-var octaves = [5,6,7];
+var octaves = [4,5,6];
 var notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
 var root = process.argv[2].toUpperCase();

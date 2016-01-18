@@ -1,7 +1,7 @@
 #! /usr/bin/env ruby
 # All are intervals from root:
 
-octaves = [5,6,7]
+octaves = [4,5,6]
 
 notes = %w{c c# d d# e f f# g g# a a# b}.map {|n| n.upcase}
 
