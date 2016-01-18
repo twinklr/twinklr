@@ -11,7 +11,7 @@ app.NoteView = Backbone.View.extend({
     var c = window.stave.snap.circle(this.absX(),
                                      this.absY(),
                                      0).attr({'data-cid': this.model.cid,
-                                                                                            'class': this.noteClass()}).animate({r: window.stave.noteRadius}, 30);
+                                       'class': this.noteClass()}).animate({r: window.stave.noteRadius}, 30);
 
     var that = this;
 
@@ -46,7 +46,18 @@ app.NoteView = Backbone.View.extend({
   color: function() {
     return this.model.get('color');
   },
+
   noteClass: function() {
-    return "note" + (this.model.get('scaleIndex') + 1);
+    var index = app.soundBox.getScaleIndexFor(this.model);
+    return "note" + index;
+  },
+
+  updateNoteClass: function() {
+    var that = this;
+
+    var thisNoteSvg = $("circle[data-cid="+this.model.cid+"]")[0];
+
+    Snap(thisNoteSvg).attr({'class': that.noteClass()});
   }
+
 });

@@ -153,6 +153,15 @@ app.soundBox = {
     this.loadScaleSounds();
   },
 
+  scaleLength: function() {
+    return this.scales[this.scaleType].length;
+  },
+
+  getScaleIndexFor: function(note) {
+    var i = note.get('index');
+    return (i % this.scaleLength()) + 1;
+  }
+
 }
 
 app.soundBox.setup();

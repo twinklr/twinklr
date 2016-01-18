@@ -122,6 +122,7 @@
         });
         $("#ui").on('change', '#scale-type', function() {
           app.soundBox.updateScaleType($(this).val());
+          app.noteViewManager.recolourNotes();
         });
       });
 

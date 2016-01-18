@@ -10,5 +10,13 @@ app.noteViewManager = {
   deleteNoteView: function(cid) {
     this.noteViews[cid].removeSvg();
     delete this.noteViews[cid];
+  },
+  
+  recolourNotes: function() {
+    $.each(this.noteViews, function(i) {
+      console.log("Updating class for ", this);
+      this.updateNoteClass();
+    });
+    
   }
 }
