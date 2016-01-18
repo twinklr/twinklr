@@ -57,7 +57,8 @@ app.soundBox = {
     console.log('all notes calculated');
 
     for(var i = 0; i < this.allNotes.length; i++) {
-      var sound = new buzz.sound("sounds/plinks/"+this.allNotes[i], {
+      var fileString = this.allNotes[i].replace("#", "sharp");
+      var sound = new buzz.sound("sounds/plinks/"+fileString, {
         formats: [ 'mp3'],
         preload: true,
         autoplay: false,
@@ -73,6 +74,7 @@ app.soundBox = {
   loadScaleSounds: function() {
     // blank sounds
     this.sounds = [];
+    this.scaleNotes = [];
 
     var tempNotes = this.allNotes.slice(0);;
     var tempSounds = this.allSounds.slice(0);;
@@ -90,9 +92,8 @@ app.soundBox = {
 
     console.log("Scale is", scale);
 
-    outputScale = [];
 
-    outputScale.push(allNotesBeginningWithRoot[0]);
+    this.scaleNotes.push(allNotesBeginningWithRoot[0]);
     this.sounds.push(tempSounds[0]);
 
     while(allNotesBeginningWithRoot.length > 0) {
@@ -100,7 +101,7 @@ app.soundBox = {
         allNotesBeginningWithRoot.shift();
         tempSounds.shift();
       }
-      outputScale.push(allNotesBeginningWithRoot[0]);
+      this.scaleNotes.push(allNotesBeginningWithRoot[0]);
       this.sounds.push(tempSounds[0]);
 
       // rotate the array
@@ -109,23 +110,27 @@ app.soundBox = {
     }
 
     // remove any nils
-    for(var i = 0; i < outputScale.length; i++) {
-      if(!outputScale[i]) {
-        outputScale.splice(i,1);
+    for(var i = 0; i < this.scaleNotes.length; i++) {
+      if(!this.scaleNotes[i]) {
+        this.scaleNotes.splice(i,1);
         this.sounds.splice(i,1);
       }
     }
 
     // limit scale to 15 notes max
 
-    outputScale = outputScale.slice(0,15);
+    this.scaleNotes = this.scaleNotes.slice(0,15);
     this.sounds = this.sounds.slice(0,15);
 
+    this.playedNotes = [];
+
     console.log(this.scaleRoot + " " + this.scaleType + " loaded");
+    console.log(this.scaleNotes);
   },
 
   playNote: function(note) {
     console.log("Trying to play note", note.get('index'));
+    console.log("Trying to play ", this.scaleNotes[note.get('index')]);
     if(!_.contains(this.playedNotes, note)) {
       this.sounds[note.get('index')].stop();
       this.sounds[note.get('index')].play();
