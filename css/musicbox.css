@@ -1,16 +1,23 @@
+html { 
+  height: 100%;
+}
+
 body {
   background: #222;
   color: #eee;
   margin: 0;
   font-family: "Droid Sans", sans-serif;
   overflow: hidden;
+  height: 100%;
 }
 
 #container {
   width: 100%;
   margin: 0 auto;
+  overflow-x: hidden;
   overflow-y: hidden;
   position: relative;
+  height: 100%;
 }
 
 svg {
