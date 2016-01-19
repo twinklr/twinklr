@@ -100,6 +100,10 @@
           dimNotes();
 
           $("#ui-details .inner").html($('#template-'+id).html());
+
+          $("#scale-root").val(app.soundBox.scaleRoot);
+          $("#scale-type").val(app.soundBox.scaleType);
+
           $("#ui-details").css('bottom', -100);
           $("#ui-details").show();
 
