@@ -20,6 +20,8 @@
   },
   "homepage": "https://github.com/twinklr/twinklr#readme",
   "dependencies": {
-    "express": "^4.13.3"
+    "body-parser": "^1.14.2",
+    "express": "^4.13.3",
+    "jsonfile": "^2.2.3"
   }
 }
