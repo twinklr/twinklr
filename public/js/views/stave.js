@@ -213,4 +213,9 @@ app.Stave = Backbone.View.extend({
     this.render();
   }, 
 
+  updateWidthFromData: function(offsetWidth) {
+    this.staveWidth = offsetWidth;
+    this.render();
+  }, 
+
 });

@@ -26,7 +26,6 @@ app.NoteView = Backbone.View.extend({
   },
 
   removeSvg: function() {
-    var that = this;
 
     var thisNoteSvg = $("circle[data-cid="+this.model.cid+"]")[0];
 

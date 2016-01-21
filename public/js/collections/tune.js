@@ -16,8 +16,7 @@ app.Tune = Backbone.Collection.extend({
       var n = this.add({
         x:x,
         y:y,
-        index: index,
-        scaleIndex: index % 7,
+        index: index
       });
       this.trigger('noteMade', n);
 

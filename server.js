@@ -9,6 +9,20 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 app.use(express.static('public'));
 
+app.get('/load/:slot', function (req, res) {
+  var slot = req.params.slot;
+
+  var fileName = 'data/' + slot + '.json'
+
+  jsonfile.readFile(fileName, function(err, obj) {
+    if(err) {
+    } else {
+      res.json(obj);
+    }
+  })
+
+});
+
 app.post('/save/:slot', function (req, res) {
   var slot = req.params.slot;
   var data = req.body;

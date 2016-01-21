@@ -79,6 +79,8 @@
       <a class='load-button' data-slot='6' href="#">6</a>
       <a class='load-button' data-slot='7' href="#">7</a>
       <a class='load-button' data-slot='8' href="#">8</a>
+
+      <a href="#" class='hide-ui'>Close</a>
     </script>
 
 
@@ -155,28 +157,53 @@
         
         $("#ui").on('click', '.save-button', function() {
           var slot = $(this)[0].dataset.slot
-          alert('Save slot ' + slot);
 
           var data = {};
           data.notes = [];
 
           window.tune.each(function(note) {
             data.notes.push({x: note.get('x'),
-                        y: note.get('y')});
+                        y: note.get('y'),
+                        index: note.get('index')});
           });
 
           data.scaleType = app.soundBox.scaleType;
           data.scaleRoot = app.soundBox.scaleRoot;
-          data.staveWidth = window.stave.width;
-
+          data.staveWidth = window.stave.staveWidth;
 
           $.post('/save/'+slot, {data: data});
+
+          $(".hide-ui").click();
           return false;
         });
 
         $("#ui").on('click', '.load-button', function() {
           var slot = $(this)[0].dataset.slot
-          alert('Load slot ' + slot);
+            $.get('/load/'+slot, function(data) {
+              var newTune = data.data;
+
+              // delete all notes
+              _.each(app.noteViewManager.noteViews, function(nv) {
+                app.noteViewManager.deleteNoteView(nv.model.cid);
+              });
+
+              window.tune.reset();
+              // set scaleRoot
+              app.soundBox.scaleRoot = newTune.scaleRoot;
+              // set scaleType
+              app.soundBox.scaleType = newTune.scaleType;
+              // set Width
+              window.stave.updateWidthFromData(parseInt(newTune.staveWidth));
+              // for each note
+
+              console.log(newTune);
+                // draw a note
+              _.each(newTune.notes, function(note) {
+                console.log("addingNote", note.x, note.y, note.index);
+                window.tune.addNote(parseInt(note.x),parseInt(note.y),parseInt(note.index));
+              });
+              $(".hide-ui").click();
+            });
           return false;
         });
       });
