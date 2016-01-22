@@ -65,6 +65,7 @@ app.Playhead.prototype = {
     this.render();
     app.dispatcher.trigger('playheadMoved', this.playHeadPos);
   },
+
   updateWidth: function(offsetWidth) {
     // if we drag beyond the maximum length of the stave,
     // set width to maximum length of Stave
@@ -86,6 +87,16 @@ app.Playhead.prototype = {
     }
 
     this.render();
+  },
+
+  updateWidthFromData: function(offsetWidth) {
+    this.width = offsetWidth + (2*this.scope.hPadding);
+    if(this.playHeadPos > (this.width - (2*this.scope.hPadding))) {
+      this.playHeadPos = this.width - (2*this.scope.hPadding);
+    }
+
+    this.render();
   }
+
 };
 
