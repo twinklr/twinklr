@@ -6,6 +6,8 @@ var _ = require('underscore');
 
 
 var app = express();
+app.set('port', (process.env.PORT || 5000));
+
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
@@ -48,6 +50,6 @@ app.get('/slots', function (req,res) {
   });
 });
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+app.listen(app.get('port'), function() {
+  console.log('Twinklr is running on port', app.get('port'));
 });
