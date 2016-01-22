@@ -1,6 +1,8 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var jsonfile = require('jsonfile');
+var fs = require('fs');
+var _ = require('underscore');
 
 
 var app = express();
@@ -33,6 +35,17 @@ app.post('/save/:slot', function (req, res) {
   jsonfile.writeFile(file, data, function (err) {
     console.error(err)
   })
+});
+
+app.get('/slots', function (req,res) {
+  fs.readdir('data', function(err, files) {
+    var results = _.filter(files, function(f) {
+      return f.match(".json");
+    }).map(function(f) {
+      return parseInt(f.replace(".json", ""));
+    });
+    res.json(results);
+  });
 });
 
 app.listen(3000, function () {

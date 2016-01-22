@@ -15,6 +15,17 @@ $(document).ready(function() {
 
     $("#ui-details").animate({bottom: 0});
 
+    if(id == 'save-load') {
+      $.get("/slots", function(data) {
+        $(".load-button").each(function(i) {
+          var slot = $(this)[0].dataset.slot
+          if(data.indexOf(parseInt(slot)) > -1) {
+            $(this).removeClass('disabled');
+          }
+        });
+      });
+    }
+
     return false;
   });
 

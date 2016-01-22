@@ -114,3 +114,21 @@ circle.highlighted {
   border: 1px solid #888;
   display: none;
 }
+
+.save-button:link, .save-button:visited, .load-button:link, .load-button:visited {
+  display: inline-block;
+  padding: 20px;
+  border: 1px solid #888;
+  text-decoration: none;
+}
+
+.save-button:hover, .save-button:active, .load-button:hover, .load-button:active {
+  background: #888;
+  color: white;
+}
+
+.load-button.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: default;
+}
