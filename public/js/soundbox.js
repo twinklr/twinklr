@@ -143,6 +143,18 @@ app.soundBox = {
     this.playedNotes = [];
   },
 
+  updateScale: function(root,type) {
+    console.log(root,type);
+    if(root) {
+      this.scaleRoot = root;
+    }
+
+    if(type) {
+      this.scaleType = type;
+    }
+    this.loadScaleSounds();
+  },
+
   updateScaleRoot: function(root) {
     this.scaleRoot = root;
     this.loadScaleSounds();
