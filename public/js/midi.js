@@ -36,12 +36,13 @@ Midi.prototype.noteValue = function(noteString) {
   var CTHREE = 60;
 
   if(this.allNotes.indexOf(noteString.toLowerCase()) > 0) {
-    return CTHREE + this.allNotes.indexOf(noteString.toLowerCase()) + this.transpose;
+    return CTHREE + this.allNotes.indexOf(noteString.toLowerCase()) + parseInt(this.transpose);
   }
 }
 
 Midi.prototype.selectOutput = function(outputId) {
   this.selectedOutput = this.midiAccess.outputs.get(outputId);
+  console.log("Selecting MIDI output", this.selectedOutput);
 }
 
 Midi.prototype.play = function(noteString) {
@@ -60,6 +61,14 @@ Midi.prototype.play = function(noteString) {
         that.selectedOutput.send( [0x80, that.noteValue(noteString), 32] );          
       },this.gateTime);
       this.prevNoteString= noteString;
+  }
+}
+
+Midi.prototype.panic = function() {
+  if(this.selectedOutput) {
+    for(var i = 0; i < this.allNotes.length; i++) {
+      this.selectedOutput.send( [0x80, this.noteValue(this.allNotes[i]), 32] );          
+    }
   }
 }
 

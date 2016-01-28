@@ -26,6 +26,14 @@ $(document).ready(function() {
       });
     }
 
+    if(id == 'midi-options') {
+      refreshMidi();
+      if(app.midi) {
+        $("#midi-transpose").val(app.midi.transpose);
+        $("#midi-gate").val(app.midi.gateTime);
+      }
+    }
+
     return false;
   });
 
@@ -67,6 +75,47 @@ $(document).ready(function() {
     loadTuneFrom(slot);
     return false;
   });
+
+  $("#ui").on('change', '#midi-output', function() {
+    var id = $(this).val();
+    if(app.midi) {
+      app.midi.selectOutput(id);
+    }
+    return false;
+  });
+
+  $("#ui").on('change', '#midi-gate', function() {
+    var gate = $(this).val();
+    if(app.midi) {
+      app.midi.gateTime = gate;
+    }
+    return false;
+  });
+
+  $("#ui").on('change', '#midi-transpose', function() {
+    var transpose = $(this).val();
+    if(app.midi) {
+      app.midi.transpose = transpose;
+    }
+    return false;
+  });
+
+  $("#ui").on('click', '.panic-midi', function() {
+    if(app.midi) {
+      app.midi.panic();
+    }
+    return false;
+  });
+
+
+
+
+  $("#ui").on('click', '.refresh-midi', function() {
+    refreshMidi();
+    return false;
+  });
+
+
 
   function dimNotes() {
     $("circle").each(function(i) {
@@ -129,5 +178,26 @@ $(document).ready(function() {
       $(".hide-ui").click();
     });
   }
+
 });
+
+function refreshMidi() {
+  if(app.midi) {
+    var outputs = app.midi.listOutputs();
+    var select = $("#midi-output");
+
+    select.find('option').remove();
+
+    select.append("<option value=''>-</option>");
+    $.each(outputs, function (i, output) {
+      select.append("<option value='"+ output.id + "'>"+ output.name + "</option>");
+    });
+
+
+    if(app.midi.selectedOutput) {
+      select.val(app.midi.selectedOutput.id);
+    }
+
+  }
+}
 

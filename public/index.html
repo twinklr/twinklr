@@ -27,6 +27,37 @@
       Adjust sequence length. <a href='#' class='hide-ui'>Done</a>
     </script>
 
+    <script id='template-midi-options' type='text/template'>
+      <b>Pick a MIDI port to use:</b>
+
+      <select id='midi-output' name='output-id'></select>
+      
+      <a class='refresh-midi' href="#">Refresh</a>
+
+      <b>Transpose MIDI output:</b>
+      <select id="midi-transpose" name='transpose'>
+        <option value='-24'>-2 octaves</option>
+        <option value='-12'>-1 octave</option>
+        <option value='0' selected>0</option>
+        <option value='12'>+1 octave</option>
+        <option value='24'>+2 octaves</option>
+      </select>
+
+      <b>MIDI note length</b>
+      <select id="midi-gate" name='gate'>
+        <option value='100'>100ms</option>
+        <option value='250'>250ms</option>
+        <option value='300' selected>300ms</option>
+        <option value='500'>500ms</option>
+        <option value='750'>750ms</option>
+        <option value='1000'>1000ms</option>
+      </select>
+
+
+      <a class='panic-midi' href="#">Panic</a>
+      <a href='#' class='hide-ui'>Done</a>
+    </script>
+
     <script id='template-scale-options' type="text/template">
       <b>Scale options</b>
       Root note:
@@ -116,6 +147,8 @@
         window.playhead = new app.Playhead(stave.snap,stave.width,stave.height,stave);
         
       });
+
+        refreshMidi();
 
     </script>
   </body>
