@@ -129,14 +129,18 @@ app.soundBox = {
   },
 
   playNote: function(note) {
-    console.log("Trying to play note", note.get('index'));
-    console.log("Trying to play ", this.scaleNotes[note.get('index')]);
+    //console.log("Trying to play note", note.get('index'));
+    //console.log("Trying to play ", this.scaleNotes[note.get('index')]);
     if(!_.contains(this.playedNotes, note)) {
       this.sounds[note.get('index')].stop();
       this.sounds[note.get('index')].play();
       this.playedNotes.push(note);
+      if(app.midi) {
+        app.midi.play(this.scaleNotes[note.get('index')]);
+      }
     }
     this.currentNote = note;
+
   },
 
   clearPlayedNotes: function() {

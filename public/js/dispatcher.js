@@ -29,9 +29,8 @@ app.dispatcher.on('changedDirection', function() {
 });
 
 app.dispatcher.on('playNote', function(note) {
-  console.log("trying to play", note);
+  //console.log("trying to play", note);
   app.soundBox.playNote(note);
-  // todo: do midi too here.
 });
 
 app.dispatcher.on('widthUpdated', function(pos) {

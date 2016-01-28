@@ -105,7 +105,7 @@
     <script type='text/javascript' src='./js/note_view_manager.js'></script>
     <script type='text/javascript' src='./js/views/stave.js'></script>
     <script type='text/javascript' src='./js/views/note_view.js'></script>
-    <script type='text/javascript' src='./js/views/midi.js'></script>
+    <script type='text/javascript' src='./js/midi.js'></script>
 
     <script type='text/javascript' src='./js/ui.js'></script>
 
@@ -115,10 +115,6 @@
         window.stave = new app.Stave(tune);
         window.playhead = new app.Playhead(stave.snap,stave.width,stave.height,stave);
         
-        if(navigator.requestMIDIAccess) {
-          appMidi = new app.Midi();
-        }
-
       });
 
     </script>
