@@ -149,6 +149,7 @@
 
         $( window ).resize(function() {
           window.stave.render();
+          window.playhead.updateHeight(stave.height);
         });
       });
 

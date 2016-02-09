@@ -66,6 +66,11 @@ app.Playhead.prototype = {
     app.dispatcher.trigger('playheadMoved', this.playHeadPos);
   },
 
+  updateHeight: function(newHeight) {
+    this.height = newHeight;
+    this.render();
+  },
+
   updateWidth: function(offsetWidth) {
     // if we drag beyond the maximum length of the stave,
     // set width to maximum length of Stave
