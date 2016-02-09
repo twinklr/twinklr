@@ -5,6 +5,9 @@ app.Stave = Backbone.View.extend({
   events: {
     'mousemove': 'mousemove',
     'mousedown': 'mousedown',
+    'touchstart': 'touchstart',
+    'touchend': 'touchend',
+    'touchmove': 'touchmove',
     'mouseup': 'mouseup',
     'mousewheel': 'mousewheel',
     'click': 'click',
@@ -146,11 +149,26 @@ app.Stave = Backbone.View.extend({
     }
   },
 
+  touchmove: function(event) {
+    if((app.editMode == 'alter-sequence-length') && this.mouseIsDown) {
+      //console.log(event.offsetX);
+      app.dispatcher.trigger('widthUpdated', event.touches[0].clientX);
+    }
+  },
+
   mousedown: function (event) {
     this.mouseIsDown = true;
   },
 
+  touchstart: function(event) {
+    this.mouseIsDown = true;
+  },
+
   mouseup: function (event) {
+    this.mouseIsDown = false;
+  },
+
+  touchend: function (event) {
     this.mouseIsDown = false;
   },
 
