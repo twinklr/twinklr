@@ -146,6 +146,10 @@
         window.stave = new app.Stave(tune);
         window.playhead = new app.Playhead(stave.snap,stave.width,stave.height,stave);
         
+
+        $( window ).resize(function() {
+          window.stave.render();
+        });
       });
 
         refreshMidi();

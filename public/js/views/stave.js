@@ -34,18 +34,10 @@ app.Stave = Backbone.View.extend({
      * Set up stave visuals
      */
 
-    this.width = this.$el.width();
-    this.height = this.$el.height();
-    this.$el.attr('width', this.$el.width() );
-    this.$el.attr('height', this.$el.height() );
-
     this.vPadding = 50;
     this.hPadding = 80;
 
-    this.staveWidth = this.width - (this.hPadding*2);
-    this.staveHeight = this.height - (this.vPadding*3);
-    this.lineHeight = this.staveHeight / (this.lineCount)
-    this.noteRadius = this.lineHeight/2;
+    this.setupStaveDimensions();
 
     this.snap = Snap('#stave');
 
@@ -58,6 +50,8 @@ app.Stave = Backbone.View.extend({
 
   render: function() {
     var that = this;
+
+    this.setupStaveDimensions();
 
     var lineWidth = 1;
     var strokeStyle = "#666";
@@ -235,5 +229,19 @@ app.Stave = Backbone.View.extend({
     this.staveWidth = offsetWidth;
     this.render();
   }, 
+
+  setupStaveDimensions: function() {
+    this.width = this.$el.width();
+    this.height = this.$el.height();
+    this.$el.attr('width', this.$el.width() );
+    this.$el.attr('height', this.$el.height() );
+
+    
+
+    this.staveWidth = this.width - (this.hPadding*2);
+    this.staveHeight = this.height - (this.vPadding*3);
+    this.lineHeight = this.staveHeight / (this.lineCount)
+    this.noteRadius = this.lineHeight/2;
+  },
 
 });
