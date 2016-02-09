@@ -34,8 +34,8 @@ app.dispatcher.on('playNote', function(note) {
 });
 
 app.dispatcher.on('widthUpdated', function(pos) {
-  window.stave.updateWidth(event.offsetX);
-  window.playhead.updateWidth(event.offsetX);
+  window.stave.updateWidth(pos);
+  window.playhead.updateWidth(pos);
 });
 
 app.dispatcher.on('tidyNotes', function() {
