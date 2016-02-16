@@ -51,8 +51,6 @@ app.Stave = Backbone.View.extend({
   render: function() {
     var that = this;
 
-    this.setupStaveDimensions();
-
     var lineWidth = 1;
     var strokeStyle = "#666";
 
