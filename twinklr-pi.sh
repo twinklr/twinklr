@@ -2,6 +2,6 @@
 
 cp asoundrc ~/.asoundrc
 sudo alsactl init 1
-forever start socketreader.js
+#forever start socketreader.js
 forever start server.js
 /usr/bin/chromium-browser --noerrdialogs --kiosk http://localhost:5000
