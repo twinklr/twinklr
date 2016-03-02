@@ -9,7 +9,7 @@ app.Stave = Backbone.View.extend({
     'touchend': 'touchend',
     'touchmove': 'touchmove',
     'mouseup': 'mouseup',
-    'mousewheel': 'mousewheel',
+    //'mousewheel': 'mousewheel',
     'click': 'click',
   },
 

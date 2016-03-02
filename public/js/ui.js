@@ -1,4 +1,8 @@
 $(document).ready(function() {
+  $("body").mousewheel(function(event, delta) {
+    event.preventDefault();
+    window.stave.mousewheel(event, delta);
+  });
   $("#ui .buttons a").click(function() {
     var id = $(this).attr('id');
     app.editMode = id;
