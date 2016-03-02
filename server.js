@@ -4,14 +4,35 @@ var jsonfile = require('jsonfile');
 var fs = require('fs');
 var _ = require('underscore');
 
+/*
+ * TOP-LEVEL VARIABLES
+ */
 
 var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+/*
+ * EXPRESS CONFIG
+ */
+
 app.set('port', (process.env.PORT || 5000));
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
-
 app.use(express.static('public'));
+
+/*
+ * ROUTING
+ */
+
+app.get('/movement/right', function(req,res) {
+  io.emit('movement', 1);
+});
+
+app.get('/movement/left', function(req,res) {
+  io.emit('movement', -1);
+});
 
 app.get('/load/:slot', function (req, res) {
   var slot = req.params.slot;
@@ -50,6 +71,15 @@ app.get('/slots', function (req,res) {
   });
 });
 
-app.listen(app.get('port'), function() {
+
+/*
+ * ...AND FINALLY
+ */
+
+io.on('connection', function(socket){
+  console.log('client connected');
+});
+
+http.listen(app.get('port'), function(){
   console.log('Twinklr is running on port', app.get('port'));
 });

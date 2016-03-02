@@ -1,6 +1,6 @@
 {
   "name": "twinklr",
-  "version": "1.0.0",
+  "version": "0.0.5",
   "description": "a digital musicbox",
   "main": "server.js",
   "scripts": {
@@ -23,6 +23,7 @@
     "body-parser": "^1.14.2",
     "express": "^4.13.3",
     "jsonfile": "^2.2.3",
+    "socket.io": "^1.4.5",
     "underscore": "^1.8.3"
   }
 }
