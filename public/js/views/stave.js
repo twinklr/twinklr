@@ -144,7 +144,7 @@ app.Stave = Backbone.View.extend({
   touchmove: function(event) {
     if((app.editMode == 'alter-sequence-length') && this.mouseIsDown) {
       //console.log(event.offsetX);
-      app.dispatcher.trigger('widthUpdated', event.touches[0].clientX);
+      app.dispatcher.trigger('widthUpdated', event.originalEvent.touches[0].clientX);
     }
   },
 
