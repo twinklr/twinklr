@@ -8,9 +8,11 @@ var _ = require('underscore');
  * TOP-LEVEL VARIABLES
  */
 
+
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+
 
 /*
  * EXPRESS CONFIG
@@ -27,11 +29,13 @@ app.use(express.static('public'));
  */
 
 app.get('/movement/right', function(req,res) {
-  io.emit('movement', 1);
+  io.emit('movement', -1);
+  res.send(200);
 });
 
 app.get('/movement/left', function(req,res) {
-  io.emit('movement', -1);
+  io.emit('movement', 1);
+  res.send(200);
 });
 
 app.get('/load/:slot', function (req, res) {
